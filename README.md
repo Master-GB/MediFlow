@@ -1,2 +1,2 @@
 # MediFlow
-Smart Clinic &amp; Patient Management System (without AI)
+Smart Clinic &amp; Patient Management System (with AI)
