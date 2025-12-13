@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
     },
     role:{
         type:String,
-        enum:['patient','clinic'],
+        enum:['patient','clinicAdmin','doctor','pharmacist'],
         default:'patient'
     },
     verifyOtp:{

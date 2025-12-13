@@ -69,7 +69,7 @@ export const loginUser = async (req, res) => {
       return res.status(400).json({ success: false, message: "Invalid email" });
     }
 
-    if(!user.isAccountVerified){
+    if (!user.isAccountVerified) {
       return res.status(400).json({ success: false, message: "Account not verified" });
     };
 
@@ -82,7 +82,14 @@ export const loginUser = async (req, res) => {
 
     generateToken(res, user._id, user.name, user.role);
 
-    return res.status(200).json({ success: true, message: "Login successful" });
+    return res.status(200).json({
+      success: true, user: {
+        id: user._id,
+        name: user.name,
+        role: user.role
+      },
+      message: "Login successful"
+    });
   } catch (error) {
     return res
       .status(500)
@@ -109,7 +116,7 @@ export const logoutUser = async (req, res) => {
 };
 
 export const sendOTP = async (req, res) => {
-  const id  = req.user.id;
+  const id = req.user.id;
 
   try {
     const user = await userModel.findById(id);
@@ -150,8 +157,8 @@ export const sendOTP = async (req, res) => {
             <!-- Body -->
             <tr>
               <td style="padding:28px 30px; color:#374151;">
-                <p style="margin:0 0 14px; font-size:16px;">Hi ${ user.name ?? "there"
-                },</p>
+                <p style="margin:0 0 14px; font-size:16px;">Hi ${user.name ?? "there"
+      },</p>
 
                 <p style="margin:0 0 18px; font-size:15px; line-height:1.6; color:#4b5563;">
                   Thank you for creating an account with <strong>MediFlow</strong>.
@@ -170,9 +177,8 @@ export const sendOTP = async (req, res) => {
                 </p>
 
                 <div style="text-align:center; margin:18px 0;">
-                  <a href="${
-                    verifyUrl ?? "#"
-                  }" target="_blank" rel="noopener" style="display:inline-block; text-decoration:none; background:#0d6efd; color:#ffffff; padding:12px 22px; border-radius:8px; font-weight:600;">
+                  <a href="${verifyUrl ?? "#"
+      }" target="_blank" rel="noopener" style="display:inline-block; text-decoration:none; background:#0d6efd; color:#ffffff; padding:12px 22px; border-radius:8px; font-weight:600;">
                     Verify Account
                   </a>
                 </div>
@@ -180,9 +186,8 @@ export const sendOTP = async (req, res) => {
                 <p style="margin:0 0 8px; font-size:13px; color:#6b7280;">
                   If the button doesn't work, copy and paste this link into your browser:
                 </p>
-                <p style="word-break:break-all; font-size:12px; color:#6b7280; margin:6px 0 0;">${
-                  verifyUrl ?? "—"
-                }</p>
+                <p style="word-break:break-all; font-size:12px; color:#6b7280; margin:6px 0 0;">${verifyUrl ?? "—"
+      }</p>
 
                 <hr style="border:none; border-top:1px solid #eef2f7; margin:24px 0;" />
 
@@ -218,7 +223,7 @@ export const sendOTP = async (req, res) => {
 };
 
 export const verifyUserAccount = async (req, res) => {
-  const {otp} = req.body;
+  const { otp } = req.body;
   const id = req.user.id;
 
   if (!id || !otp) {
@@ -226,26 +231,26 @@ export const verifyUserAccount = async (req, res) => {
   }
 
   try {
-     const user = await userModel.findById(id);
+    const user = await userModel.findById(id);
 
-     if (!user) {
-      return res.status(400).json({success:false,message:"User not found"});
-     }
+    if (!user) {
+      return res.status(400).json({ success: false, message: "User not found" });
+    }
 
-      if(user.verifyOtp !==otp || user.verifyOtp === ''){
-        return res.status(400).json({success:false,message:"Invalid OTP"});
-      }  
+    if (user.verifyOtp !== otp || user.verifyOtp === '') {
+      return res.status(400).json({ success: false, message: "Invalid OTP" });
+    }
 
-      if(user.verifyOtpExpiry < Date.now()){ 
-        return res.status(400).json({success:false,message:"OTP Expired"});
-      }
+    if (user.verifyOtpExpiry < Date.now()) {
+      return res.status(400).json({ success: false, message: "OTP Expired" });
+    }
 
-      user.isAccountVerified = true;
-      user.verifyOtp = '';
-      user.verifyOtpExpiry = 0;
-      await user.save();
+    user.isAccountVerified = true;
+    user.verifyOtp = '';
+    user.verifyOtpExpiry = 0;
+    await user.save();
 
-      const htmlMessage = `<!DOCTYPE html>
+    const htmlMessage = `<!DOCTYPE html>
 <html lang="en" style="margin:0; padding:0; font-family:Arial, sans-serif;">
   <head>
     <meta charset="UTF-8" />
@@ -333,7 +338,7 @@ export const verifyUserAccount = async (req, res) => {
   </body>
 </html>`;
     sendEmail(user.email, "Welcome to MediFlow", htmlMessage);
-    return res.status(200).json({success:true,message:"Account verified successfully"});
+    return res.status(200).json({ success: true, message: "Account verified successfully" });
 
   } catch (error) {
     return res
@@ -343,16 +348,16 @@ export const verifyUserAccount = async (req, res) => {
 }
 
 export const sendResetOtp = async (req, res) => {
-  const {email} = req.body;
+  const { email } = req.body;
 
-   try {
-    if(!email){
-      return res.status(400).json({success:false,message:"Email is required"});
+  try {
+    if (!email) {
+      return res.status(400).json({ success: false, message: "Email is required" });
     }
-    
-    const user = await userModel.findOne({email});
-    if(!user){
-      return res.status(400).json({success:false,message:"User not found"});
+
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ success: false, message: "User not found" });
     }
 
     const passOtp = String(Math.floor(100000 + Math.random() * 900000));
@@ -438,7 +443,7 @@ export const sendResetOtp = async (req, res) => {
   </body>
 </html>`;
     sendEmail(user.email, "Password Reset OTP", htmlMessage);
-    return res.status(200).json({success:true,message:"Password reset OTP sent to email"});
+    return res.status(200).json({ success: true, message: "Password reset OTP sent to email" });
 
   } catch (error) {
     return res.status(500).json({ success: false, message: "Password reset request failed", error: error.message });
@@ -446,42 +451,42 @@ export const sendResetOtp = async (req, res) => {
 }
 
 export const verifyResetOtp = async (req, res) => {
-   const {email, passotp} = req.body;
-    try {
-      if(!email || !passotp){
-        return res.status(400).json({success:false,message:"Missing Details"});
-      }
-      const user = await userModel.findOne({email});
-      if(!user){
-        return res.status(400).json({success:false,message:"User not found"});
-      }
-
-      if(user.resetOtp !== passotp || user.resetOtp === ''){
-        return res.status(400).json({success:false,message:"Invalid OTP"});
-      }
-
-      if(user.resetOtpExpiry < Date.now()){ 
-        return res.status(400).json({success:false,message:"OTP Expired"});
-      }
-
-      return res.status(200).json({success:true,message:"OTP verified successfully"});
-
-    } catch (error) {
-       return res.status(500).json({ success: false, message: "OTP verification failed", error: error.message });
+  const { email, passotp } = req.body;
+  try {
+    if (!email || !passotp) {
+      return res.status(400).json({ success: false, message: "Missing Details" });
     }
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ success: false, message: "User not found" });
+    }
+
+    if (user.resetOtp !== passotp || user.resetOtp === '') {
+      return res.status(400).json({ success: false, message: "Invalid OTP" });
+    }
+
+    if (user.resetOtpExpiry < Date.now()) {
+      return res.status(400).json({ success: false, message: "OTP Expired" });
+    }
+
+    return res.status(200).json({ success: true, message: "OTP verified successfully" });
+
+  } catch (error) {
+    return res.status(500).json({ success: false, message: "OTP verification failed", error: error.message });
+  }
 }
 
 export const resetPassword = async (req, res) => {
- 
-  const {email, newPassword} = req.body;
+
+  const { email, newPassword } = req.body;
   try {
-    if(!email || !newPassword){
-      return res.status(400).json({success:false,message:"Missing Details"});
+    if (!email || !newPassword) {
+      return res.status(400).json({ success: false, message: "Missing Details" });
     }
-  
-    const user = await userModel.findOne({email});
-    if(!user){
-      return res.status(400).json({success:false,message:"User not found"});
+
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ success: false, message: "User not found" });
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
@@ -490,10 +495,18 @@ export const resetPassword = async (req, res) => {
     user.resetOtpExpiry = 0;
     await user.save();
 
-    return res.status(200).json({success:true,message:"Password reset successfully"});
+    return res.status(200).json({ success: true, message: "Password reset successfully" });
 
   } catch (error) {
     return res.status(500).json({ success: false, message: "Password reset failed", error: error.message });
   }
 
 }
+
+// Get logged-in user
+export const getMe = (req, res) => {
+  res.json({
+    success: true,
+    user: req.user
+  });
+};
