@@ -1,5 +1,5 @@
 import express from "express";
-import { loginUser,registerUser,logoutUser,sendOTP,verifyUserAccount,resetPassword,sendResetOtp,verifyResetOtp } from "../controllers/authController.js";
+import { loginUser,registerUser,logoutUser,sendOTP,verifyUserAccount,resetPassword,sendResetOtp,verifyResetOtp,getMe } from "../controllers/authController.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
 
 const authRouter = express.Router();
@@ -12,5 +12,21 @@ authRouter.post('/verify-account',authMiddleware,verifyUserAccount);
 authRouter.post('/send-reset-otp',sendResetOtp);
 authRouter.post('/verify-reset-otp',verifyResetOtp);
 authRouter.post('/reset-password',resetPassword);
+authRouter.get('/me', authMiddleware, getMe);
+
+// router.use(authMiddleware);
+// router.use(authorizeRoles("doctor"));
+
+// router.get("/dashboard", doctorDashboard);
+// router.get("/patients", doctorPatients);
+// ------------------------------------------------------
+// router.get(
+//   "/doctor/dashboard",
+//   authMiddleware,
+//   authorizeRoles("doctor"),
+//   controller
+// );
+
+
 
 export default authRouter;
