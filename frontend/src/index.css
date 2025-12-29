@@ -1,2 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap');
+
 @import "tailwindcss";
 
+.sub{
+    font-family: "Merriweather", serif;
+}
+
+.heading1{
+    font-family: 'Anton', sans-serif;
+}
+
+.heading2{
+    font-family: "Archivo Black", sans-serif;
+}
+
+.vision-mission-bg {
+  position: relative;
+  isolation: isolate;
+}
+.vision-mission-bg::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  background-image: url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  z-index: -1;
+}
+.vision-mission-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(29, 78, 216, 0.6); /* blue-700 with 60% opacity */
+  z-index: -1;
+}

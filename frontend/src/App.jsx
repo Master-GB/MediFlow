@@ -6,9 +6,11 @@ import LandingPage from "./pages/landingPage.jsx"
 const LandingPageLayout = () => {
   return (
     <div>
+    <div>
       <Routes>
         <Route path="/" element={<LandingPage />} />
       </Routes>
+    </div>
     </div>
   );
 };
