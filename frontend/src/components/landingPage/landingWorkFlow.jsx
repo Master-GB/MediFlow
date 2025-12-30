@@ -35,7 +35,7 @@ const LandingWorkFlow = () => {
   }, []);
 
   // Arrow positions: top (25%), middle (50%), bottom (75%)
-  const arrowPositions = ['25%', '50%', '75%'];
+  const arrowPositions = ['20%', '50%', '80%'];
   
   // Different colors for each arrow
   const arrowColors = [
@@ -67,7 +67,7 @@ const LandingWorkFlow = () => {
 
   return (
     <div className="relative overflow-x-hidden" style={{ zIndex: 100, boxShadow: '0 20px 25px -5px rgba(29, 78, 216, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.05)' }}>
-      <section ref={sectionRef} className="pt-0 pb-14 -mt-3 relative overflow-visible bg-linear-to-r from-blue-100 to-emerald-100" >
+      <section ref={sectionRef} className="pt-2 pb-14 -mt-3 relative overflow-visible bg-linear-to-r from-blue-100 to-emerald-100" >
         
         {/* Left side pulse waves - Healthcare heartbeat style */}
         {arrowPositions.map((position, index) => {
@@ -77,12 +77,12 @@ const LandingWorkFlow = () => {
           return (
             <div 
               key={`left-${index}`}
-              className="absolute left-0 z-[200] pointer-events-none"
+              className="absolute left-0 z-2 pointer-events-none"
               style={{
                 top: position,
-                transform: `translate(${leftTransform}px, -50%)`,
+                transform: `translate(${leftTransform}px, -50%) rotate(-10deg) skewY(-2deg)`,
                 opacity: waveProgress,
-                transition: 'transform 0.2s ease-out, opacity 0.2s ease-out'
+                transition: 'transform 0.7s ease-out, opacity 0.2s ease-out'
               }}
             >
               <svg
@@ -91,7 +91,7 @@ const LandingWorkFlow = () => {
                 viewBox="0 0 180 80"
                 fill="none"
                 style={{
-                  filter: `drop-shadow(0 8px 25px ${arrowColors[index].gradient[0]}CC)`,
+                  filter: `drop-shadow(0 8px 15px ${arrowColors[index].gradient[0]}CC)`,
                 }}
               >
                 {/* Heartbeat pulse wave */}
@@ -112,7 +112,7 @@ const LandingWorkFlow = () => {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   fill="none"
-                  opacity="0.3"
+                  opacity="0.2"
                 />
                 
                 {/* Flowing particles along the wave */}
@@ -156,12 +156,12 @@ const LandingWorkFlow = () => {
           return (
             <div 
               key={`right-${index}`}
-              className="absolute right-0 z-[200] pointer-events-none"
+              className="absolute right-0 z-1 pointer-events-none"
               style={{
                 top: position,
-                transform: `translate(${rightTransform}px, -50%)`,
+                transform: `translate(${rightTransform}px, -50%) rotate(10deg) skewY(5deg)`,
                 opacity: waveProgress,
-                transition: 'transform 0.2s ease-out, opacity 0.2s ease-out'
+                transition: 'transform 0.7s ease-out, opacity 0.2s ease-out'
               }}
             >
               <svg
@@ -170,7 +170,7 @@ const LandingWorkFlow = () => {
                 viewBox="0 0 180 80"
                 fill="none"
                 style={{
-                  filter: `drop-shadow(0 8px 25px ${arrowColors[index].gradient[0]}CC)`,
+                 filter: `drop-shadow(0 8px 15px ${arrowColors[index].gradient[0]}CC)`,
                 }}
               >
                 {/* Heartbeat pulse wave (mirrored) */}
@@ -191,7 +191,7 @@ const LandingWorkFlow = () => {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   fill="none"
-                  opacity="0.3"
+                  opacity="0.2"
                 />
                 
                 {/* Flowing particles along the wave */}
@@ -250,7 +250,7 @@ const LandingWorkFlow = () => {
             {/* Animated connecting line with visible effects */}
             <div className="hidden lg:flex absolute top-24 left-1/2 transform -translate-x-1/2 w-4/5 h-2 rounded-full overflow-hidden">
               {/* Base gradient background */}
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-green-400 to-blue-500 rounded-full"></div>
+              <div className="absolute inset-0 bg-linear-to-r from-blue-500 via-green-400 to-blue-500 rounded-full"></div>
               
               {/* Animated flowing light effect */}
               <div 
