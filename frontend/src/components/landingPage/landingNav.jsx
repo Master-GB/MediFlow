@@ -162,7 +162,7 @@ const LandingNav = ({ className = '' }) => {
             {/* CTA (desktop) */}
             <div className="hidden sm:flex sm:items-center sm:space-x-3 ml-12 mr-4">
               <a 
-                href="/login" 
+                href="/signUp" 
                 className={`inline-flex items-center gap-2 px-4 py-1.5 font-bold rounded-lg transition-all ${
                   scrolled 
                     ? 'bg-white/10 text-white hover:bg-white/20' 

@@ -90,7 +90,7 @@ const LandingTestimonials = () => {
 
   return (
     <div>
-      <section className="pt-10 pb-16 bg-gradient-to-r from-blue-100 to-emerald-100 relative overflow-hidden" style={{ zIndex: 10, boxShadow: '0 -50px 25px -3px rgba(29, 78, 216, 0.5), 0 -10px 10px -5px rgba(0, 0, 0, 0.05)' }}>
+      <section className="pt-10 pb-16 bg-linear-to-r from-blue-100 to-emerald-100 relative overflow-hidden" style={{ zIndex: 10, boxShadow: '0 -50px 25px -3px rgba(29, 78, 216, 0.5), 0 -10px 10px -5px rgba(0, 0, 0, 0.05)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
             {[
@@ -193,7 +193,7 @@ const LandingTestimonials = () => {
                 variants={fadeInUp}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                href="/signup"
+                href="/signUp"
                 className="px-8 py-4 bg-green-500 text-white font-semibold rounded-full hover:shadow-lg hover:shadow-green-600/30 transition-all"
               >
                 Get Started Free

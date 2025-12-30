@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Particles } from "react-tsparticles";
 import { loadSlim } from "tsparticles-slim";
-import LandingNav from "../components/landingNav.jsx";
-import LandingFooter from '../components/landingFooter.jsx';
-import LandingAbout from "../components/landingAbout.jsx";
-import LandingFeature from "../components/landingFeature.jsx";
-import LandingWorkFlow from "../components/landingWorkFlow.jsx";
-import LandingCoreValue from "../components/landingCoreValue.jsx";
-import LandingTestimonials from "../components/landingTestimonials.jsx";
+import LandingNav from "../components/landingPage/landingNav.jsx";
+import LandingFooter from '../components/landingPage/landingFooter.jsx';
+import LandingAbout from "../components/landingPage/landingAbout.jsx";
+import LandingFeature from "../components/landingPage/landingFeature.jsx";
+import LandingWorkFlow from "../components/landingPage/landingWorkFlow.jsx";
+import LandingCoreValue from "../components/landingPage/landingCoreValue.jsx";
+import LandingTestimonials from "../components/landingPage/landingTestimonials.jsx";
 import dnaBg from "../assets/images/newBG2.jpg";
 import overBG from "../assets/images/overBG.png";
 
@@ -193,7 +193,7 @@ const LandingPage = () => {
 
               <div className="mt-12 px-4 sm:pl-7 flex flex-wrap gap-4 items-center">
                 <a
-                  href="/register"
+                  href="/signUp"
                   className="group relative inline-flex items-center justify-center pl-6 pr-2 py-2.5 text-lg bg-blue-600 text-white font-semibold shadow-lg hover:shadow-xl hover:bg-blue-700 transition-all overflow-hidden"
                 >
                   <span className="relative z-10 flex items-center ">
