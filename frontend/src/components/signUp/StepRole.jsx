@@ -1,22 +1,11 @@
 import { useState } from 'react';
 import { User, Building2, ChevronRight, Sparkles, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import LandingNav from '../landingPage/landingNav';
 
 const StepRole = ({ role, setRole, next }) => {
     const navigate = useNavigate();
     const [hoveredRole, setHoveredRole] = useState(null);
-
-    const handleContactSupport = (e) => {
-        e.preventDefault();
-        // Replace with your actual support page route
-        window.location.href = '/contact';
-    };
-
-    const handleSignIn = (e) => {
-        e.preventDefault();
-        navigate('/login');
-    };
-
     const roles = [
         {
             id: 'patient',
@@ -48,6 +37,7 @@ const StepRole = ({ role, setRole, next }) => {
 
     return (
         <div className="min-h-screen w-screen bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 overflow-x-hidden m-0 p-0">
+            <LandingNav/>
             {/* Animated background elements */}
             <div className="fixed inset-0 overflow-hidden">
                 <div className="absolute -top-32 -right-32 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl animate-pulse pointer-events-none"></div>
@@ -154,7 +144,7 @@ const StepRole = ({ role, setRole, next }) => {
                 </div>
 
                 {/* Step Indicator */}
-                <div className="flex justify-center mb-8">
+                <div className="flex justify-center mb-5">
                     <div className="flex items-center">
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium bg-blue-500 text-white `}>
                             1
@@ -171,27 +161,27 @@ const StepRole = ({ role, setRole, next }) => {
                 </div>
 
                 {/* Footer with Links and Continue Button */}
-                <div className="mt-4 space-y-4 text-center animate-fade-in">
+                <div className="mt-1 mb-4 space-y-4 text-center animate-fade-in">
                     <div className="flex flex-col sm:flex-row justify-center items-center gap-4 text-gray-500 text-sm">
                         <div className="flex items-center gap-1">
                             <span>Need help?</span>
-                            <button
-                                onClick={handleContactSupport}
-                                className="text-cyan-400 hover:text-cyan-300 cursor-pointer transition-colors flex items-center gap-1"
+                            <a
+                                href="/contact"
+                                className="text-cyan-400 hover:text-cyan-300 cursor-pointer hover:underline transition-colors flex items-center gap-1"
                             >
                                 Contact Support
-                            </button>
+                            </a>
                         </div>
                         <div className="hidden sm:block w-px h-4 bg-gray-600"></div>
                         <div className="flex items-center gap-1">
                             <span>Already have an account?</span>
-                            <button
-                                onClick={handleSignIn}
-                                className="text-cyan-400 hover:text-cyan-300 cursor-pointer transition-colors font-medium flex items-center gap-1"
+                            <a
+                                href="/login"
+                                className="text-cyan-400 hover:text-cyan-300 cursor-pointer hover:underline transition-colors font-medium flex items-center gap-1 group"
                             >
                                 Sign In
-                                <ArrowRight className="w-3.5 h-3.5" />
-                            </button>
+                                <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100  mt-1 transition-opacity duration-200 -translate-x-1 group-hover:translate-x-0" />
+                            </a>
                         </div>
                     </div>
                     <div className="flex justify-center">
@@ -199,7 +189,7 @@ const StepRole = ({ role, setRole, next }) => {
                             onClick={handleContinue}
                             disabled={!role}
                             className={`group px-8 py-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all duration-300 ${role
-                                    ? 'bg-linear-to-r from-blue-600 to-cyan-500 text-white hover:shadow-lg hover:shadow-blue-500/50'
+                                    ? 'bg-linear-to-r from-blue-600 to-cyan-500 text-white hover:shadow-lg cursor-pointer hover:shadow-blue-500/50'
                                     : 'bg-white/10 text-gray-500 cursor-not-allowed'
                                 }`}
                         >
