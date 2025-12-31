@@ -16,14 +16,14 @@ const Signup = () => {
   }
 
   return (
-    <div className={`min-h-screen ${step === 1 ? 'p-0' : 'flex items-center justify-center px-4'} bg-linear-to-br from-blue-50 to-emerald-100`}>
-      <LandingNav/>
+    <div className="min-h-screen w-screen overflow-x-hidden bg-linear-to-br from-blue-50 to-emerald-100">
+      
       {step === 1 ? (
         <div className="w-full m-0 p-0">
           <StepRole role={role} setRole={setRole} next={() => setStep(2)} />
         </div>
       ) : (
-        <div className="w-full max-w-7xl bg-white rounded-3xl shadow-xl p-8">
+        <div className="w-full max-w-screen-2xl mx-auto p-0 m-0">
           {step === 2 && role === "patient" && (
             <StepBasicPatient data={formData} setData={setFormData} next={() => setStep(3)} back={() => setStep(1)} />
           )}
