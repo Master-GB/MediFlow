@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { User, Building2, ChevronRight, Sparkles, ArrowRight } from 'lucide-react';
+import { User, Building2, Sparkles, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import LandingNav from '../landingPage/landingNav';
 
@@ -194,7 +194,7 @@ const StepRole = ({ role, setRole, next }) => {
                                 }`}
                         >
                             <span>Continue</span>
-                            <ChevronRight className={`w-5 h-5 transition-transform duration-300 ${role ? 'group-hover:translate-x-1' : ''
+                            <ArrowRight className={`w-5 h-5 transition-transform duration-300 ${role ? 'group-hover:translate-x-1' : ''
                                 }`} />
                         </button>
                     </div>

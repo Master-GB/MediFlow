@@ -1,4 +1,5 @@
 import { User, Mail, Lock, ArrowLeft, ArrowRight, Shield, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
+import { FaGoogle, FaFacebookF, FaLinkedinIn } from 'react-icons/fa';
 import { useState } from 'react';
 
 
@@ -7,16 +8,16 @@ const StepBasicPatient = ({ data, setData, next, back }) => {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
-    
+
     const validateEmail = (email) => {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return re.test(String(email).toLowerCase());
     };
-    
+
     const handleEmailChange = (e) => {
         const email = e.target.value;
         setData({ ...data, email });
-        
+
         if (email && !validateEmail(email)) {
             setEmailError('Please enter a valid email address');
         } else {
@@ -38,7 +39,7 @@ const StepBasicPatient = ({ data, setData, next, back }) => {
         const { name, value } = e.target;
         const newData = { ...data, [name]: value };
         setData(newData);
-        
+
         // Check if both password fields have values
         if (newData.password && newData.confirmPassword) {
             validatePasswords(newData.password, newData.confirmPassword);
@@ -51,7 +52,19 @@ const StepBasicPatient = ({ data, setData, next, back }) => {
     const handleChange = (e) =>
         setData({ ...data, [e.target.name]: e.target.value });
 
-    const isFormValid = data.name && data.email && data.password && data.confirmPassword && data.password === data.confirmPassword;
+    const isFormValid = 
+    data.firstName && 
+    data.lastName && 
+    data.email && 
+    validateEmail(data.email) && 
+    data.password && 
+    data.password.length >= 8 && 
+    /[A-Z]/.test(data.password) && 
+    /[a-z]/.test(data.password) && 
+    /[0-9]/.test(data.password) &&
+    data.confirmPassword && 
+    data.password === data.confirmPassword && 
+    data.terms;
 
     const passwordRequirements = [
         { label: 'At least 8 characters', met: data.password?.length >= 8 },
@@ -68,7 +81,7 @@ const StepBasicPatient = ({ data, setData, next, back }) => {
                     {emailError && (
                         <div className="bg-red-500/90 text-white px-6 py-3 rounded-lg shadow-lg flex items-center justify-between min-w-64">
                             <span>{emailError}</span>
-                            <button 
+                            <button
                                 onClick={() => setEmailError('')}
                                 className="ml-4 text-white hover:text-gray-200"
                             >
@@ -79,7 +92,7 @@ const StepBasicPatient = ({ data, setData, next, back }) => {
                     {passwordError && (
                         <div className="bg-red-500/90 text-white px-6 py-3 rounded-lg shadow-lg flex items-center justify-between min-w-64">
                             <span>{passwordError}</span>
-                            <button 
+                            <button
                                 onClick={() => setPasswordError('')}
                                 className="ml-4 text-white hover:text-gray-200"
                             >
@@ -89,54 +102,113 @@ const StepBasicPatient = ({ data, setData, next, back }) => {
                     )}
                 </div>
             )}
-            
+
             {/* Main Content Card */}
             <div className="w-full flex flex-col md:flex-row m-0 p-0 h-screen">
-                {/* Left Side - Blue Gradient */}
-                <div className="hidden md:flex md:w-2/5 bg-linear-to-br from-blue-600 via-cyan-600 to-blue-700 p-6 md:p-8 lg:p-12 relative overflow-y-auto m-0">
-                    
+                {/* Left Side*/}
+                <div className="hidden md:flex md:w-2/5  p-6 md:p-8 lg:p-12 relative overflow-y-auto m-0"
+                    style={{
+                        backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url("/src/assets/images/signUpB2.jpg")',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center'
+                    }}
+                >
 
-                    <div className="relative z-10 w-full h-full flex flex-col justify-center -mt-22">
-                        <div className="flex items-center">
-                            <a href="/" className={`flex items-center gap-2 -ml-16 text-white`}>
+                    {/* Logo*/}
+                    <div className="relative z-10 w-full h-full flex flex-col justify-center ">
+                        <div className="w-full flex justify-center">
+                            <a href="/" className="flex items-center text-white mb-12 mr-122 -mt-10 ">
                                 <img
                                     src="/src/assets/images/newLogo.png"
                                     alt="MediFlow Logo"
-                                    className={`h-25 w-auto mt-0`}
+                                    className="h-25 w-auto"
                                 />
-                                <span className={`heading2 text-3xl mt-0  -ml-9 text-white`}>MediFlow</span>
+                                <span className="heading2 text-3xl text-white  transform -translate-x-7.5">MediFlow</span>
                             </a>
                         </div>
-                        <div className="space-y-8">                        
-                            <div className="space-y-4">
-                                <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
-                                    <User className="w-4 h-4 text-white" />
-                                    <span className="text-sm font-medium text-white">Patient Registration</span>
-                                </div>
-                                
-                                <p className="text-blue-100 text-lg">
-                                    Join thousands of patients managing their healthcare journey with ease
+                        {/* Centered content */}
+                        <div className="flex-1 flex flex-col justify-center items-center text-center px-4 mt-45 ">
+                            <div className="w-full max-w-2xl">
+                                <h2 className="text-4xl font-semibold text-white mb-6">Your Health, Our Priority</h2>
+                                <p className="text-blue-100 text-lg mb-8 leading-relaxed">
+                                    Join thousands of patients who trust MediFlow for seamless healthcare management.
+                                    Experience the future of medical care with our secure, easy-to-use platform.
                                 </p>
                             </div>
-
-                            {/* Features List */}
-                            <div className="space-y-4">
-                                {[
-                                    { icon: '🏥', title: 'Find Doctors Easily', desc: 'Search and book appointments instantly' },
-                                    { icon: '📊', title: 'Health Tracking', desc: 'Monitor your health records in one place' },
-                                    { icon: '🔒', title: 'Secure & Private', desc: 'Your data is encrypted and protected' }
-                                ].map((feature, idx) => (
-                                    <div key={idx} className="flex items-start gap-4 p-4 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
-                                        <div className="text-3xl">{feature.icon}</div>
-                                        <div>
-                                            <h3 className="font-semibold text-white mb-1">{feature.title}</h3>
-                                            <p className="text-sm text-blue-100">{feature.desc}</p>
-                                        </div>
+                            {/* Social Media Buttons */}
+                            <div className="w-full">
+                                <div className="relative my-6">
+                                    <div className="absolute inset-0 flex items-center">
+                                        <div className="w-full border-t border-gray-600"></div>
                                     </div>
-                                ))}
+                                    <div className="relative flex justify-center">
+                                        <span className="px-4 bg-slate-800 text-gray-300 text-sm">GET CONNECTED WITH</span>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-3 gap-4">
+                                    <a
+                                        href="https://accounts.google.com"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="group flex items-center justify-center p-2 bg-white/10 hover:bg-[#DB4437]/10 rounded-xl transition-all duration-200 hover:shadow-[0_0_0_2px_rgba(219,68,55,0.3)]"
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            console.log('Google sign in clicked');
+                                            // Add your Google OAuth logic here
+                                        }}
+                                    >
+                                        <FaGoogle className="w-6 h-6 text-[#DB4437] group-hover:drop-shadow-[0_0_8px_rgba(219,68,55,0.6)] transition-all duration-200" />
+                                    </a>
+                                    <a
+                                        href="https://www.facebook.com"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="group flex items-center justify-center p-2 bg-white/10 hover:bg-[#4267B2]/10 rounded-xl transition-all duration-200 hover:shadow-[0_0_0_2px_rgba(66,103,178,0.3)]"
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            console.log('Facebook sign in clicked');
+                                            // Add your Facebook OAuth logic here
+                                        }}
+                                    >
+                                        <FaFacebookF className="w-6 h-6 text-[#4267B2] group-hover:drop-shadow-[0_0_8px_rgba(66,103,178,0.6)] transition-all duration-200" />
+                                    </a>
+                                    <a
+                                        href="https://www.linkedin.com"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="group flex items-center justify-center p-2 bg-white/10 hover:bg-[#0077B5]/10 rounded-xl transition-all duration-200 hover:shadow-[0_0_0_2px_rgba(0,119,181,0.3)]"
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            console.log('LinkedIn sign in clicked');
+                                            // Add your LinkedIn OAuth logic here
+                                        }}
+                                    >
+                                        <FaLinkedinIn className="w-6 h-6 text-[#0077B5] group-hover:drop-shadow-[0_0_8px_rgba(0,119,181,0.6)] transition-all duration-200" />
+                                    </a>
+                                </div>
+                            </div>
+                            {/* Step Indicator */}
+                            <div className="mt-10 w-full flex justify-center">
+                                <div className="flex items-center">
+                                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium bg-green-500 text-white">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                    </div>
+                                    <div className="w-16 h-0.5 bg-blue-500 mx-2"></div>
+                                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium bg-blue-500 text-white">
+                                        2
+                                    </div>
+                                    <div className="w-16 h-0.5 bg-white/20 mx-2"></div>
+                                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium bg-white/10 text-gray-400">
+                                        3
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
 
                 {/* Right Side - Form Section */}
@@ -145,7 +217,7 @@ const StepBasicPatient = ({ data, setData, next, back }) => {
 
                         <div className="space-y-6 -mt-3">
                             {/* Form Header */}
-                            <div className="space-y-2">
+                            <div className="space-y-2 -ml-15 ">
                                 <h2 className="text-4xl font-bold text-white leading-tight">
                                     Create Your Account
                                 </h2>
@@ -277,7 +349,7 @@ const StepBasicPatient = ({ data, setData, next, back }) => {
                                             name="terms"
                                             checked={data.terms || false}
                                             onChange={(e) => setData({ ...data, terms: e.target.checked })}
-                                            className="mt-0.5 h-4 w-4 rounded border-white/20 bg-white/5 text-blue-500 focus:ring-blue-500 shrink-0"
+                                            className="mt-0.5 h-4 w-4 rounded border-white/20 bg-white/5 checked:bg-blue-500 checked:border-blue-500 focus:ring-blue-500 focus:ring-offset-0 shrink-0"
                                         />
                                         <label htmlFor="terms" className="text-sm text-gray-400">
                                             I agree to the <a href="/terms" className="text-blue-400 hover:text-cyan-300 hover:underline">Terms & Conditions</a> and <a href="/privacy" className="text-blue-400 hover:text-cyan-300 hover:underline">Privacy Policy</a>
@@ -288,16 +360,16 @@ const StepBasicPatient = ({ data, setData, next, back }) => {
                                     <span>Already have an account? </span>
                                     <a href="/signin" className="ml-1 text-blue-400 hover:text-cyan-300 hover:underline font-medium flex items-center gap-1 group">
                                         Sign In
-                                        <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 -translate-x-1 group-hover:translate-x-0" />
+                                        <ArrowRight className="w-3.5 h-3.5 mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 -translate-x-1 group-hover:translate-x-0" />
                                     </a>
                                 </div>
                             </div>
-                            
+
                             {/* Horizontal Divider */}
                             <div className="border-t border-white/10 my-4"></div>
 
                             {/* Action Buttons */}
-                            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-6">
+                            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-2">
                                 <button
                                     onClick={back}
                                     className="flex items-center gap-2 px-5 py-2.5 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all duration-200 font-medium"
@@ -309,13 +381,13 @@ const StepBasicPatient = ({ data, setData, next, back }) => {
                                 <button
                                     onClick={next}
                                     disabled={!isFormValid}
-                                    className={`flex items-center gap-2 px-8 py-3 rounded-xl font-semibold transition-all duration-200 ${isFormValid
-                                            ? 'bg-linear-to-r from-blue-600 to-cyan-600 text-white hover:shadow-lg hover:shadow-blue-500/30 hover:scale-105'
-                                            : 'bg-white/5 text-gray-500 cursor-not-allowed'
+                                    className={`group px-8 py-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all duration-300 ${isFormValid
+                                        ? 'bg-linear-to-r from-blue-600 to-cyan-500 text-white hover:shadow-lg hover:shadow-blue-500/50 cursor-pointer'
+                                        : 'bg-white/10 text-gray-500 cursor-not-allowed'
                                         }`}
                                 >
                                     <span>Continue</span>
-                                    <ArrowRight className="w-4 h-4" />
+                                    <ArrowRight className={`w-5 h-5 transition-transform duration-300 ${isFormValid ? 'group-hover:translate-x-1' : ''}`} />
                                 </button>
                             </div>
                         </div>
