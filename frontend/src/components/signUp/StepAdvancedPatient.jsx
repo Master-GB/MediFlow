@@ -371,7 +371,22 @@ const StepAdvancedPatient = ({ data, setData, submit, back }) => {
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     
-    // Update the data first
+    // Special handling for phone number field
+    if (name === 'emergencyPhone') {
+      // Only allow numbers and +, and limit to 15 characters
+      const filteredValue = value.replace(/[^0-9+]/g, '');
+      if (filteredValue.length <= 15) {
+        const newData = {
+          ...data,
+          [name]: filteredValue
+        };
+        setData(newData);
+        validateField(name, filteredValue, [...errorMessages]);
+      }
+      return;
+    }
+    
+    // For all other fields
     const newData = {
       ...data,
       [name]: type === 'checkbox' ? checked : value
@@ -1406,7 +1421,12 @@ const StepAdvancedPatient = ({ data, setData, submit, back }) => {
           className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-8 border-t border-white/5"
         >
           <button
-            onClick={back}
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              back();
+            }}
             className="flex items-center gap-2 px-5 py-2.5 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all duration-200 font-medium"
           >
             <ChevronLeft className="w-4 h-4" />
