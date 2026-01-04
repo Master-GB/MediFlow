@@ -362,9 +362,9 @@ const StepBasicPatient = ({ data, setData, next, back }) => {
                             <motion.div className="space-y-6 -mt-3" variants={containerVariants}>
                                 <motion.div className="space-y-2 -ml-15" variants={itemVariants}>
                                     <motion.h2 className="text-4xl font-bold text-white leading-tight" variants={itemVariants}>
-                                        Create Your Account
+                                        Create Patient Account
                                     </motion.h2>
-                                    <motion.p className="text-gray-400 text-sm" variants={itemVariants}>Please fill in your details to continue</motion.p>
+                                    <motion.p className="text-gray-400 text-sm" variants={itemVariants}>Please fill this details to continue</motion.p>
                                 </motion.div>
 
                                 <motion.div className="space-y-5" variants={containerVariants}>
