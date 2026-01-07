@@ -539,27 +539,26 @@ const StepBasicPatient = ({ data, setData, next, back }) => {
                 </div>
             </div>
 
-            <style jsx global>{`
+            <style>{`
                 /* Fix for autofill styles */
-                input:-webkit-autofill,
-                input:-webkit-autofill:hover, 
-                input:-webkit-autofill:focus, 
-                input:-webkit-autofill:active {
-                    -webkit-text-fill-color: white !important;
-                    -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.02) inset !important;
-                    transition: background-color 5000s ease-in-out 0s;
-                    caret-color: white;
-                }
-
-                /* For Firefox */
-                input:autofill,
-                input:autofill:hover,
-                input:autofill:focus {
-                    -webkit-text-fill-color: white !important;
-                    -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.02) inset !important;
-                    transition: background-color 5000s ease-in-out 0s;
-                    caret-color: white;
-                }
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active {
+        -webkit-text-fill-color: white !important;
+        -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.02) inset !important;
+        transition: background-color 5000s ease-in-out 0s;
+        caret-color: white;
+    }
+    /* For Firefox */
+    input:autofill,
+    input:autofill:hover,
+    input:autofill:focus,
+    input:autofill:active {
+        -webkit-text-fill-color: white !important;
+        -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.02) inset !important;
+        transition: background-color 5000s ease-in-out 0s;
+        caret-color: white;
             `}</style>
         </>
     );

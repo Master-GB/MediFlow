@@ -1,18 +1,18 @@
 import { useState, useEffect, useRef } from 'react';
 import {
-  Building2, MapPin, Phone, Clock, Stethoscope,
-  Calendar, Users, Shield, Upload, Palette, Bell,
+  Building2, MapPin, Clock, Stethoscope, Users, Shield, Upload, Palette, Bell,
   Plus, X, Check, ChevronDown, Info, ArrowLeft, ArrowRight,
   FileText, CalendarDays, Map, Home, PhoneCall, AlertCircle,
-  User, CalendarClock, FileCheck, Wifi, Languages, BriefcaseMedical,
+  User, FileCheck, Languages, BriefcaseMedical,
   ClipboardList, FileSignature, FileCheck2, Sunrise, Sunset,
   Calendar as CalendarIcon, Clock as ClockIcon, UserPlus, FileText as FileTextIcon,
   Globe, ClipboardCheck, Map as MapIcon, Phone as PhoneIcon, AlertTriangle,
   User as UserIcon, Users as UsersIcon, FileSignature as FileSignatureIcon,
   FileCheck as FileCheck2Icon, Briefcase, Calendar as CalendarIcon2,
-  Clock as ClockIcon2, UserCheck, Clipboard, Globe2, CheckCircle
+  Clock as ClockIcon2, UserCheck
 } from 'lucide-react';
-import { motion, AnimatePresence, useInView } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 
 // Animation Variants
@@ -59,11 +59,11 @@ const FormSection = ({ title, description, icon: Icon, children, required = fals
       animate={isInView ? "visible" : "hidden"}
       variants={containerVariants}
       transition={{ delayChildren: 0 }}
-      className="bg-gradient-to-br from-slate-800/70 to-slate-900/70 backdrop-blur-sm rounded-2xl border border-white/5 p-6 shadow-xl hover:shadow-blue-500/10 hover:border-white/10 transition-all duration-300 mb-6"
+      className="bg-linear-to-br from-slate-800/70 to-slate-900/70 backdrop-blur-sm rounded-2xl border border-white/5 p-6 shadow-xl hover:shadow-blue-500/10 hover:border-white/10 transition-all duration-300 mb-6"
     >
       <motion.div className="flex items-start gap-4 mb-6">
         <motion.div
-          className="p-2.5 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-xl text-blue-400"
+          className="p-2.5 bg-linear-to-br from-blue-500/20 to-cyan-500/20 rounded-xl text-blue-400"
           whileHover={{ rotate: 5, scale: 1.05 }}
           transition={{ type: 'spring', stiffness: 300 }}
         >
@@ -169,9 +169,20 @@ const SelectField = ({
         <select
           id={id}
           value={selectValue}
-          onChange={onChange}
+          onChange={(e) => {
+            // Create a synthetic event object that matches what handleChange expects
+            const syntheticEvent = {
+              target: {
+                name: name,
+                value: e.target.value,
+                type: 'select-one'
+              }
+            };
+            onChange(syntheticEvent);
+          }}
           className="block w-full bg-slate-800/80 border-2 border-slate-600/50 hover:border-blue-500/50 rounded-lg py-2.5 pl-10 pr-10 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none appearance-none transition-all duration-200 cursor-pointer"
           required={required}
+          name={name}
           {...props}
         >
           {options.map((option) => {
@@ -203,125 +214,10 @@ const SelectField = ({
   );
 };
 
-// MultiSelect Component
-const MultiSelect = ({
-  label,
-  icon: Icon,
-  options = [],
-  selected = [],
-  onChange,
-  name,
-  className = '',
-  required = false
-}) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const toggleOption = (option) => {
-    const newSelected = [...selected];
-    const index = newSelected.indexOf(option);
-
-    if (index === -1) {
-      newSelected.push(option);
-    } else {
-      newSelected.splice(index, 1);
-    }
-
-    onChange({ target: { name, value: newSelected } });
-  };
-
-  return (
-    <motion.div className={`space-y-1.5 ${className}`} variants={itemVariants}>
-      <label className="text-sm font-medium text-gray-300">
-        {typeof label === 'string' ? (
-          <span className="flex items-center">
-            {Icon && <Icon className="w-4 h-4 text-white mr-1.5" />}
-            {label}
-            {required && <RequiredField />}
-          </span>
-        ) : (
-          <span className="flex items-center">
-            {label}
-            {required && <RequiredField />}
-          </span>
-        )}
-      </label>
-      <div className="relative" ref={dropdownRef}>
-        <button
-          type="button"
-          onClick={() => setIsOpen(!isOpen)}
-          className={`w-full bg-slate-800/50 border border-slate-700/50 rounded-lg py-2.5 ${Icon ? 'pl-10 pr-10' : 'px-4'} text-left text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 outline-none transition-all duration-200 flex items-center justify-between`}
-        >
-          <span className="truncate">
-            {selected.length === 0
-              ? `Select ${typeof label === 'string' ? label.toLowerCase() : 'options'}`
-              : selected.length === 1
-                ? selected[0]
-                : `${selected.length} selected`}
-          </span>
-          <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform duration-200 ${isOpen ? 'transform rotate-180' : ''}`} />
-        </button>
-
-        <AnimatePresence>
-          {isOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              transition={{ duration: 0.2 }}
-              className="absolute z-10 mt-1 w-full bg-slate-800 border border-slate-700 rounded-lg shadow-lg max-h-60 overflow-auto"
-            >
-              {options.map((option) => (
-                <div
-                  key={option}
-                  onClick={() => toggleOption(option)}
-                  className={`px-4 py-2 text-sm cursor-pointer hover:bg-slate-700/50 flex items-center justify-between ${selected.includes(option) ? 'bg-blue-500/20 text-blue-400' : 'text-gray-300'}`}
-                >
-                  <span>{option}</span>
-                  {selected.includes(option) && <Check className="h-4 w-4" />}
-                </div>
-              ))}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      {selected.length > 0 && (
-        <div className="flex flex-wrap gap-2 mt-2">
-          {selected.map((item) => (
-            <div
-              key={item}
-              className="inline-flex items-center bg-blue-500/20 text-blue-300 text-xs px-2.5 py-1 rounded-full"
-            >
-              {item}
-              <button
-                type="button"
-                onClick={() => toggleOption(item)}
-                className="ml-1.5 text-blue-200 hover:text-white"
-              >
-                <X className="h-3 w-3" />
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
-    </motion.div>
-  );
-};
 
 const StepAdvancedClinic = ({ data, setData, submit, back }) => {
   // State for mobile menu and file upload
+  const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const [fileError, setFileError] = useState('');
@@ -420,7 +316,11 @@ const StepAdvancedClinic = ({ data, setData, submit, back }) => {
     }
     // Optional: keep a local backup to guard against any timing issues
     try {
-      sessionStorage.setItem('advancedClinicFormData', JSON.stringify(formData));
+      // Exclude transient blob/object URL fields and file previews from persistence
+      const sanitized = Object.fromEntries(
+        Object.entries(formData).filter(([key]) => !key.endsWith('Preview') && !key.endsWith('Url'))
+      );
+      sessionStorage.setItem('advancedClinicFormData', JSON.stringify(sanitized));
     } catch (_) {
       // ignore storage errors
     }
@@ -469,17 +369,7 @@ const StepAdvancedClinic = ({ data, setData, submit, back }) => {
     }
   };
 
-  // Handle year established input
-  const handleYearChange = (e) => {
-    const { value } = e.target;
-    // Only allow numbers, max 4 digits
-    if (value === '' || /^\d{0,4}$/.test(value)) {
-      setFormData(prev => ({
-        ...prev,
-        yearEstablished: value
-      }));
-    }
-  };
+ 
 
   // Validate file type and size
   const validateFile = (file) => {
@@ -537,6 +427,16 @@ const StepAdvancedClinic = ({ data, setData, submit, back }) => {
       const fileInput = document.getElementById('verification-document');
       if (fileInput) fileInput.value = '';
       return;
+    }
+
+    // Revoke any previous object URLs to avoid leaks
+    try {
+      const prevPreview = formData[`${name}Preview`];
+      const prevUrl = formData[`${name}Url`];
+      if (prevPreview) URL.revokeObjectURL(prevPreview);
+      if (prevUrl) URL.revokeObjectURL(prevUrl);
+    } catch (_) {
+      // ignore revoke errors
     }
 
     // Create a preview URL for images
@@ -868,11 +768,6 @@ const StepAdvancedClinic = ({ data, setData, submit, back }) => {
     return true;
   };
 
-  // Handle skip to next section
-  const handleSkip = (e) => {
-    e.preventDefault();
-    goToNextSection(true);
-  };
 
   // Handle form submission
   const handleSubmit = (e) => {
@@ -993,8 +888,8 @@ const StepAdvancedClinic = ({ data, setData, submit, back }) => {
   }, [formData, activeSection, showErrors]);
 
   return (
-    <div className="h-screen w-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white flex flex-col overflow-hidden">
-      <style jsx="true" global="true">{`
+    <div className="h-screen w-full bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 text-white flex flex-col overflow-hidden">
+      <style>{`
         /* Style the time picker icon */
         input[type="time"]::-webkit-calendar-picker-indicator {
           filter: invert(1) brightness(2);
@@ -1006,7 +901,7 @@ const StepAdvancedClinic = ({ data, setData, submit, back }) => {
         }
       `}</style>
       {/* Top Header */}
-      <header className="fixed top-0 left-0 right-0 h-20 bg-slate-800/90 backdrop-blur-sm border-b border-slate-700/50 z-20 flex-shrink-0">
+      <header className="fixed top-0 left-0 right-0 h-20 bg-slate-800/90 backdrop-blur-sm border-b border-slate-700/50 z-20 shrink-0">
         <div className="h-full w-full flex items-center justify-between px-4 md:px-6">
           <div className="flex items-center">
             <button
@@ -1052,7 +947,7 @@ const StepAdvancedClinic = ({ data, setData, submit, back }) => {
           </button>
         </div>
       </header>
-      <topHeader/>
+ 
 
       <div className="flex flex-1 pt-20 overflow-y-auto">
         {/* Sidebar Navigation - Fixed on desktop */}
@@ -1084,7 +979,7 @@ const StepAdvancedClinic = ({ data, setData, submit, back }) => {
                     : 'text-gray-300'
                   }`}
               >
-                <item.icon className="h-5 w-5 flex-shrink-0" />
+                <item.icon className="h-5 w-5 shrink-0" />
                 <span className="text-left flex-1">{item.label}</span>
                 {activeSection === item.id && (
                   <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
@@ -1144,7 +1039,7 @@ const StepAdvancedClinic = ({ data, setData, submit, back }) => {
         <main className="flex-1 p-4 md:p-8 w-full md:ml-64  flex justify-center overflow-y-auto">
           <div className="w-full max-w-4xl flex flex-col">
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} noValidate className="space-y-6">
               {/* Clinic Details Section */}
               <section
                 id="clinic-details"
@@ -1329,7 +1224,7 @@ const StepAdvancedClinic = ({ data, setData, submit, back }) => {
                       </label>
                       <div className="relative">
                         <div className="flex rounded-md shadow-sm">
-                          <div className="relative flex items-stretch flex-grow focus-within:z-10">
+                          <div className="relative flex items-stretch grow focus-within:z-10">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                               <MapPin className="h-5 w-5 text-gray-400" />
                             </div>
@@ -1339,7 +1234,7 @@ const StepAdvancedClinic = ({ data, setData, submit, back }) => {
                               value={formData.googleMapsLink || ''}
                               onChange={handleChange}
                               placeholder="https://maps.google.com/..."
-                              className="block w-full rounded-l-md border-0 py-2.5 pl-10 text-white bg-slate-800/50 border border-slate-700/50 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 outline-none transition-all autofill:bg-slate-800/50"
+                              className="block w-full rounded-l-md border-0 py-2.5 pl-10 text-white bg-slate-800/50 border-slate-700/50 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 outline-none transition-all autofill:bg-slate-800/50"
                               required
                             />
                           </div>
@@ -1753,7 +1648,6 @@ const StepAdvancedClinic = ({ data, setData, submit, back }) => {
                                 src={formData.verificationDocumentPreview}
                                 alt="Preview"
                                 className="w-full h-auto max-h-40 object-contain mx-auto"
-                                onLoad={(e) => URL.revokeObjectURL(e.target.src)}
                               />
                             </div>
                           ) : formData.verificationDocumentType === 'application/pdf' ? (
@@ -2078,7 +1972,7 @@ const StepAdvancedClinic = ({ data, setData, submit, back }) => {
                       <div className="mt-1 flex items-center">
                         <span className="h-12 w-12 rounded-full overflow-hidden bg-slate-700 flex items-center justify-center">
                           {formData.logo ? (
-                            <img src={URL.createObjectURL(formData.logo)} alt="Clinic Logo" className="h-full w-full object-cover" />
+                            <img src={formData.logoPreview} alt="Clinic Logo" className="h-full w-full object-cover" />
                           ) : (
                             <Building2 className="h-6 w-6 text-gray-400" />
                           )}
@@ -2170,7 +2064,7 @@ const StepAdvancedClinic = ({ data, setData, submit, back }) => {
                           onChange={handleChange}
                           className="sr-only peer"
                         />
-                        <div className="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                        <div className="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                       </label>
                     </div>
 
@@ -2187,7 +2081,7 @@ const StepAdvancedClinic = ({ data, setData, submit, back }) => {
                           onChange={handleChange}
                           className="sr-only peer"
                         />
-                        <div className="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                        <div className="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                       </label>
                     </div>
                   </div>
@@ -2217,7 +2111,7 @@ const StepAdvancedClinic = ({ data, setData, submit, back }) => {
                       <button
                         type="button"
                         onClick={() => goToNextSection(false)}
-                        className="group px-8 py-3 rounded-xl font-semibold flex items-center justify-center transition-all duration-300 bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:shadow-lg hover:shadow-blue-500/50"
+                        className="group px-8 py-3 rounded-xl font-semibold flex items-center justify-center transition-all duration-300 bg-linear-to-r from-blue-600 to-cyan-500 text-white hover:shadow-lg hover:shadow-blue-500/50"
                       >
                         <span>Save & Continue</span>
                         <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1 ml-2" />
@@ -2241,7 +2135,7 @@ const StepAdvancedClinic = ({ data, setData, submit, back }) => {
             <div className="h-2 md:h-1"></div>
           </div>
         </main>
-        <style jsx="true" global="true">{`
+        <style>{`
 
          /* Time picker icon styling for all browsers */
   input[type="time"] {

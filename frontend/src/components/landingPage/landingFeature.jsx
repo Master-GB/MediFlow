@@ -116,8 +116,14 @@ const landingFeature = () => {
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);
     const [scrollLeft, setScrollLeft] = useState(0);
+    const [activeFeature, setActiveFeature] = useState(null);
     const navigate = useNavigate();
-    const duplicatedFeatures = [...features, ...features, ...features];
+    // Create duplicated features with unique keys by appending the iteration index to the ID
+    const duplicatedFeatures = [
+        ...features.map(f => ({ ...f, id: `${f.id}-1` })),
+        ...features.map(f => ({ ...f, id: `${f.id}-2` })),
+        ...features.map(f => ({ ...f, id: `${f.id}-3` }))
+    ];
 
 
 
@@ -408,7 +414,7 @@ const landingFeature = () => {
                     </div>
                 </div>
 
-                <style jsx>{`
+                <style jsx="true">{`
                     @keyframes fadeInUp {
                       from {
                         opacity: 0;
