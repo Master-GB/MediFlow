@@ -62,11 +62,11 @@ const FormSection = ({ title, description, icon: Icon, children, delay = 0 }) =>
       animate={isInView ? "visible" : "hidden"}
       variants={containerVariants}
       transition={{ delayChildren: delay }}
-      className="bg-gradient-to-br from-slate-800/70 to-slate-900/70 backdrop-blur-sm rounded-2xl border border-white/5 p-6 shadow-xl hover:shadow-blue-500/10 hover:border-white/10 transition-all duration-300"
+      className="bg-linear-to-br from-slate-800/70 to-slate-900/70 backdrop-blur-sm rounded-2xl border border-white/5 p-6 shadow-xl hover:shadow-blue-500/10 hover:border-white/10 transition-all duration-300"
     >
       <motion.div className="flex items-start gap-4 mb-6">
         <motion.div 
-          className="p-2.5 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-xl text-blue-400"
+          className="p-2.5 bg-linear-to-br from-blue-500/20 to-cyan-500/20 rounded-xl text-blue-400"
           whileHover={{ rotate: 5, scale: 1.05 }}
           transition={{ type: 'spring', stiffness: 300 }}
         >
@@ -101,6 +101,7 @@ const InputField = ({
   label, 
   icon: Icon, 
   className = '', 
+  iconClassName = 'w-5 h-5', 
   ...props 
 }) => {
   const inputRef = useRef(null);
@@ -114,7 +115,7 @@ const InputField = ({
     >
       {label && (
         <label 
-          className="block text-sm font-medium text-gray-300 flex items-center gap-1.5"
+          className="text-sm font-medium text-gray-300 flex items-center gap-1.5"
           onClick={() => inputRef.current?.focus()}
         >
           {Icon && <Icon className="w-4 h-4" />}
@@ -149,7 +150,7 @@ const InputField = ({
         )}
         {Icon && (
           <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white group-hover:text-white transition-colors">
-            <Icon className="w-5 h-5" />
+            <Icon className={iconClassName} />
           </div>
         )}
       </div>
@@ -215,18 +216,19 @@ const Tag = ({ children, onRemove, color = 'blue', icon: Icon }) => {
 
 const StepAdvancedPatient = ({ data, setData, submit, back }) => {
   // Initialize data with default values if not present
-  useEffect(() => {
-    if (!data.allergies) setData({ ...data, allergies: [] });
-    if (!data.medications) setData({ ...data, medications: [] });
-    if (!data.conditions) setData({ ...data, conditions: [] });
-  }, []);
-
+  const [showCustomAllergy, setShowCustomAllergy] = useState(false);
   const [customInputs, setCustomInputs] = useState({
     allergy: '',
     medication: '',
-    condition: '',
-    goal: ''
+    condition: ''
   });
+
+  useEffect(() => {
+    if (!data.allergies) setData(prev => ({ ...prev, allergies: [] }));
+    if (!data.medications) setData(prev => ({ ...prev, medications: [] }));
+    if (!data.conditions) setData(prev => ({ ...prev, conditions: [] }));
+  }, []);
+
   const [bloodPressure, setBloodPressure] = useState({
     systolic: data.bloodPressure?.systolic || '',
     diastolic: data.bloodPressure?.diastolic || ''
@@ -403,12 +405,22 @@ const StepAdvancedPatient = ({ data, setData, submit, back }) => {
     
     if (allergy === 'None') {
       setData({ ...data, allergies: ['None'] });
+      setShowCustomAllergy(false);
     } else if (allergy === 'Other') {
       if (!currentAllergies.includes('Other')) {
         setData({ 
           ...data, 
-          allergies: [...currentAllergies.filter(a => a !== 'None'), 'Other']
+          allergies: [...currentAllergies.filter(a => a !== 'None' && a !== 'Other'), 'Other']
         });
+        setShowCustomAllergy(true);
+      } else {
+        // Remove 'Other' and hide the input
+        const newAllergies = currentAllergies.filter(a => a !== 'Other' && a !== 'None');
+        setData({
+          ...data,
+          allergies: newAllergies.length > 0 ? newAllergies : ['None']
+        });
+        setShowCustomAllergy(false);
       }
     } else {
       const newAllergies = currentAllergies.includes(allergy)
@@ -417,8 +429,9 @@ const StepAdvancedPatient = ({ data, setData, submit, back }) => {
       
       setData({
         ...data,
-        allergies: newAllergies
+        allergies: newAllergies.length > 0 ? newAllergies : ['None']
       });
+      setShowCustomAllergy(currentAllergies.includes('Other') && newAllergies.includes(allergy));
     }
   };
 
@@ -427,17 +440,23 @@ const StepAdvancedPatient = ({ data, setData, submit, back }) => {
       const currentAllergies = Array.isArray(data.allergies) ? [...data.allergies] : [];
       const newAllergies = [
         ...currentAllergies.filter(a => a !== 'Other'), 
-        customInputs.allergy,
-        'Other'
+        customInputs.allergy
       ];
+      
+      // Add 'Other' back if it was selected
+      if (showCustomAllergy) {
+        newAllergies.push('Other');
+      }
       
       setData({
         ...data,
-        allergies: newAllergies,
-        showCustomAllergy: true
+        allergies: newAllergies.length > 0 ? newAllergies : ['None']
       });
       
-      setCustomInputs({...customInputs, allergy: ''});
+      setCustomInputs({
+        ...customInputs,
+        allergy: ''
+      });
     }
   };
 
@@ -636,7 +655,7 @@ const StepAdvancedPatient = ({ data, setData, submit, back }) => {
               className="bg-red-500/90 text-white px-6 py-3 rounded-lg shadow-lg flex items-center justify-between min-w-64"
             >
               <div className="flex items-center">
-                <AlertTriangle className="w-5 h-5 mr-2 flex-shrink-0" />
+                <AlertTriangle className="w-5 h-5 mr-2 shrink-0" />
                 <span>{error.message}</span>
               </div>
               <button
@@ -651,7 +670,7 @@ const StepAdvancedPatient = ({ data, setData, submit, back }) => {
         </AnimatePresence>
       </div>
 
-      <style jsx global>{`
+      <style>{`
 
           /* Style the date picker icon */
       input[type="date"]::-webkit-calendar-picker-indicator {
@@ -704,6 +723,33 @@ const StepAdvancedPatient = ({ data, setData, submit, back }) => {
           scrollbar-width: thin;
           scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
         }
+
+
+
+                /* Fix for autofill styles */
+                input:-webkit-autofill,
+                input:-webkit-autofill:hover, 
+                input:-webkit-autofill:focus, 
+                input:-webkit-autofill:active {
+                    -webkit-text-fill-color: white !important;
+                    -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.02) inset !important;
+                    transition: background-color 5000s ease-in-out 0s;
+                    caret-color: white;
+                }
+
+                /* For Firefox */
+                input:autofill,
+                input:autofill:hover,
+                input:autofill:focus {
+                    -webkit-text-fill-color: white !important;
+                    -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.02) inset !important;
+                    transition: background-color 5000s ease-in-out 0s;
+                    caret-color: white;
+                }
+  
+
+
+
       `}</style>
 
       <motion.div 
@@ -714,7 +760,7 @@ const StepAdvancedPatient = ({ data, setData, submit, back }) => {
       >
         <div className="flex items-center justify-center gap-3">
           <HeartPulse className="w-9 h-9 text-white" />
-          <h2 className="text-3xl md:text-4xl font-bold text-white bg-clip-text bg-gradient-to-r from-white to-gray-300">
+          <h2 className="text-3xl md:text-4xl font-bold text-white bg-clip-text bg-linear-to-r from-white to-gray-300">
             Health Profile
             <span className="text-base font-normal ml-2">(Optional step)</span>
           </h2>
@@ -799,16 +845,16 @@ const StepAdvancedPatient = ({ data, setData, submit, back }) => {
               <motion.div 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="md:col-span-2 p-6 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-xl border border-blue-500/20 backdrop-blur-sm"
+                className="md:col-span-2 p-6 bg-linear-to-r from-blue-500/10 to-cyan-500/10 rounded-xl border border-blue-500/20 backdrop-blur-sm"
               >
                 <div className="flex items-center gap-4">
-                  <div className="p-2.5 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-lg">
+                  <div className="p-2.5 bg-linear-to-br from-blue-500/20 to-cyan-500/20 rounded-lg">
                     <Activity className="w-6 h-6 text-blue-400" />
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-medium text-white">Your BMI</p>
                     <div className="flex items-baseline gap-3 mt-1">
-                      <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400">
+                      <span className="text-3xl font-bold bg-clip-text text-transparent bg-linear-to-r from-blue-400 to-cyan-400">
                         {((data.weight / ((data.height / 100) * (data.height / 100))).toFixed(1))}
                       </span>
                       <span className="text-sm text-gray-300">
@@ -825,7 +871,7 @@ const StepAdvancedPatient = ({ data, setData, submit, back }) => {
                 </div>
                 <div className="mt-4 w-full bg-white/10 h-2 rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full"
+                    className="h-full bg-linear-to-r from-blue-500 to-cyan-500 rounded-full"
                     style={{
                       width: `${Math.min(100, Math.max(5, ((data.weight / ((data.height / 100) * (data.height / 100))) / 40) * 100))}%`
                     }}
@@ -1011,7 +1057,7 @@ const StepAdvancedPatient = ({ data, setData, submit, back }) => {
                   </motion.div>
                 ))}
               </div>
-              {data.allergies?.includes('Other') && (
+              {showCustomAllergy && (
                 <div className="mt-2 flex gap-2">
                   <input
                     type="text"
@@ -1446,7 +1492,7 @@ const StepAdvancedPatient = ({ data, setData, submit, back }) => {
             className={`group px-8 py-3.5 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all duration-300 ${
               isSubmitting 
                 ? 'bg-white/10 text-gray-500 cursor-not-allowed' 
-                : 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:shadow-lg hover:shadow-blue-500/50 cursor-pointer'
+                : 'bg-linear-to-r from-blue-600 to-cyan-500 text-white hover:shadow-lg hover:shadow-blue-500/50 cursor-pointer'
             }`}
           >
             {isSubmitting ? (

@@ -335,7 +335,7 @@ const StepBasicClinic = ({ data, setData, next, back }) => {
           </div>
 
           {/* Right Side - Form Section */}
-          <div className="w-full md:w-3/5 p-4 md:p-6 lg:p-8 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 overflow-y-auto m-0 flex justify-center">
+          <div className="w-full md:w-3/5 p-4 md:p-6 lg:p-8 bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 overflow-y-auto m-0 flex justify-center">
             <motion.div 
               className="w-full max-w-2xl px-2 sm:px-4 pt-4"
               variants={containerVariants}
@@ -510,7 +510,7 @@ const StepBasicClinic = ({ data, setData, next, back }) => {
                       disabled={!isFormValid}
                       className={`group px-8 py-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all duration-300 ${
                         isFormValid
-                          ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:shadow-lg hover:shadow-blue-500/50 cursor-pointer'
+                          ? 'bg-linear-to-r from-blue-600 to-cyan-500 text-white hover:shadow-lg hover:shadow-blue-500/50 cursor-pointer'
                           : 'bg-white/10 text-gray-500 cursor-not-allowed'
                       }`}
                     >
@@ -527,7 +527,7 @@ const StepBasicClinic = ({ data, setData, next, back }) => {
         </div>
       </div>
 
-                       <style jsx global>{`
+                       <style>{`
                 /* Fix for autofill styles */
                 input:-webkit-autofill,
                 input:-webkit-autofill:hover, 

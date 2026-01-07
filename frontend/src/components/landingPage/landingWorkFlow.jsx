@@ -273,7 +273,7 @@ const LandingWorkFlow = () => {
             </div>
 
             {/* Enhanced keyframe animations */}
-            <style jsx>{`
+            <style>{`
               @keyframes flowLight {
                 0% {
                   transform: translateX(-120%);

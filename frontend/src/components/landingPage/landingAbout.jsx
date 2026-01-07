@@ -300,7 +300,7 @@ function LandingAbout() {
                   </div>
                 </div>
 
-                <style jsx global>{`
+                <style>{`
             @keyframes marquee {
               0% { transform: translateX(0); }
               100% { transform: translateX(-55%); }
