@@ -1,47 +1,131 @@
 // src/pages/ClinicSignupSuccess.jsx
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { Clock, CheckCircle, AlertCircle, Mail, Info, Home } from 'lucide-react';
 
 const ClinicSignupSuccess = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
   const email = searchParams.get('email');
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: 'spring',
+        stiffness: 100,
+        damping: 15
+      }
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-slate-800 rounded-xl p-8 text-center">
-        <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-10 w-10 text-green-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-slate-900 flex items-center justify-center p-4">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-3xl"
+      >
+        <div className="bg-slate-800/80 backdrop-blur-sm rounded-2xl overflow-hidden border border-slate-700/50 shadow-2xl">
+          {/* Header */}
+          <div className="bg-gradient-to-r from-amber-600 to-orange-600 p-6 text-center">
+            <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4">
+              <Clock className="h-12 w-12 text-white" strokeWidth={1.5} />
+            </div>
+            <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">
+              Thank You for Trusting Us
+            </h1>
+            <p className="text-amber-100/90">
+              Registration Under Review
+            </p>
+          </div>
+
+          {/* Content */}
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="p-8"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M5 13l4 4L19 7"
-            />
-          </svg>
+            {/* Status Card */}
+            <motion.div
+              variants={itemVariants}
+              className="bg-slate-700/30 rounded-xl p-6 mb-8 border border-amber-500/20"
+            >
+              <div className="flex items-start">
+                <div className="bg-amber-500/10 p-3 rounded-lg mr-4">
+                  <Info className="h-6 w-6 text-amber-400" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-white mb-2">
+                    Your Registration is Being Processed
+                  </h3>
+                  <p className="text-slate-300 mb-4">
+                    Our team is currently reviewing your application. This process typically takes 24-48 hours.
+                    After approval, we will send you an email. You can then access our platform using you'r credentials.
+                  </p>
+                  <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700/50 mb-4">
+                    <div className="text-sm text-slate-400">
+                      <span>We'll contact you at: </span>
+                      <span className="font-mono text-blue-300">{email}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Action Buttons */}
+            <motion.div
+              variants={itemVariants}
+              className="mt-8 pt-6 border-t border-slate-700/50 space-y-4"
+            >
+              <button
+                onClick={() => navigate('/')}
+                className="w-full bg-slate-700/50 hover:bg-slate-700/70 text-white font-medium py-3 px-6 rounded-lg transition-all duration-300 flex items-center justify-center group"
+              >
+                <Home className="h-5 w-5 mr-2" />
+                Back to Home
+              </button>
+              
+              <div className="text-center">
+                <p className="text-sm text-slate-400 mb-3">
+                  Need help? Contact our support team
+                </p>
+                <a
+                  href="mailto:verification@mediflow.com"
+                  className="inline-flex items-center text-blue-400 hover:text-blue-300 text-sm transition-colors"
+                >
+                  <Mail className="h-4 w-4 mr-1.5" />
+                  verification@mediflow.com
+                </a>
+              </div>
+            </motion.div>
+          </motion.div>
         </div>
-        <h1 className="text-2xl font-bold mb-4">Registration Successful!</h1>
-        <p className="text-gray-300 mb-6">
-          Thank you for registering your clinic. A verification email has been sent to:
-        </p>
-        <div className="bg-slate-700/50 rounded-lg p-3 mb-6">
-          <span className="font-mono text-blue-300 break-all">{email}</span>
+
+        {/* Footer Note */}
+        <div className="mt-6 text-center">
+          <p className="text-sm text-slate-500">
+            You'll receive an email notification once your account is approved.
+          </p>
         </div>
-        <p className="text-gray-400 text-sm mb-6">
-          Please check your email and verify your account to get started.
-        </p>
-        <button
-          onClick={() => window.location.href = "/login"}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors"
-        >
-          Go to Login
-        </button>
-      </div>
+      </motion.div>
     </div>
   );
 };
