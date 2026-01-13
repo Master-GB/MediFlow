@@ -78,7 +78,7 @@ const ClinicSignupSuccess = () => {
                   </h3>
                   <p className="text-slate-300 mb-4">
                     Our team is currently reviewing your application. This process typically takes 24-48 hours.
-                    After approval, we will send you an email. You can then access our platform using you'r credentials.
+                    You'll receive an email notification once your account is approved. You can then access our platform using your credentials.
                   </p>
                   <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700/50 mb-4">
                     <div className="text-sm text-slate-400">

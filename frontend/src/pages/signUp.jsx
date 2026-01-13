@@ -47,9 +47,8 @@ const Signup = () => {
   // Reset signup state
   const resetSignupState = () => {
     sessionStorage.removeItem('signupState');
-    setStep(1);
-    setRole("");
-    setFormData({});
+    sessionStorage.removeItem('advancedClinicFormData');
+    sessionStorage.removeItem('advancedClinicActiveSection');
   };
 
   // Helper function to filter out 'Other' from arrays
