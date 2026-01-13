@@ -118,7 +118,7 @@ const Signup = () => {
       sessionStorage.removeItem('signupState');
 
       // Navigate to the patient dashboard
-      navigate('/patient-dashboard');
+      navigate(`/signUp-verification-code?email=${encodeURIComponent(formData.email)}`);
 
     } else if (role === 'clinic') {
       // Create the clinic data object with only the specified fields
