@@ -369,6 +369,18 @@ const StepAdvancedClinic = ({ data, setData, submit, back }) => {
     }
   };
 
+    // Handle phone number input with validation
+  const handleEmergencyPhoneChange = (e) => {
+    const { value } = e.target;
+    // Only allow numbers and +, limit to 15 characters, must start with +
+    if (value === '' || /^\+?[0-9]{0,14}$/.test(value)) {
+      setFormData(prev => ({
+        ...prev,
+        emergencyPhone: value
+      }));
+    }
+  };
+
  
 
   // Validate file type and size
@@ -686,6 +698,22 @@ const StepAdvancedClinic = ({ data, setData, submit, back }) => {
         newErrors.push('Phone number must be 8-15 digits and can only contain numbers and +');
         hasErrors = true;
       }
+
+ 
+        if (formData.emergencyPhone) {
+        if (formData.emergencyPhone === formData.phone) {
+          newErrors.push('Emergency contact number must be different from primary phone number');
+          hasErrors = true;
+        }
+
+        if (!/^[0-9+]{8,15}$/.test(formData.emergencyPhone)) {
+        newErrors.push('Phone number must be 8-15 digits and can only contain numbers and +');
+        hasErrors = true;
+      }
+
+        }
+      
+       
     }
 
     // Operating Details Section
@@ -770,42 +798,56 @@ const StepAdvancedClinic = ({ data, setData, submit, back }) => {
 
 
   // Handle form submission
-  const handleSubmit = (e) => {
+ const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setShowErrors(false);
+    setErrors([]);
 
-    // If it's the last section, validate all sections before final submission
-    if (activeSection === navItems[navItems.length - 1].id) {
-      for (const section of navItems) {
-        setActiveSection(section.id);
-        const sectionErrors = validateCurrentSection();
-        if (sectionErrors.length > 0) {
-          setErrors(sectionErrors.map((message, idx) => ({ id: `${section.id}-${idx}-${Date.now()}`, message })));
-          const element = document.getElementById(section.id);
-          if (element) {
-            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
-          setShowErrors(true);
-          setIsSubmitting(false);
-          return;
+    try {
+        // If it's the last section, validate all sections before final submission
+        if (activeSection === navItems[navItems.length - 1].id) {
+            // Validate all sections
+            for (const section of navItems) {
+                setActiveSection(section.id);
+                const sectionErrors = validateCurrentSection();
+                if (sectionErrors.length > 0) {
+                    setErrors(sectionErrors.map((message, idx) => ({ 
+                        id: `${section.id}-${idx}-${Date.now()}`, 
+                        message 
+                    })));
+                    const element = document.getElementById(section.id);
+                    if (element) {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                    setShowErrors(true);
+                    setIsSubmitting(false);
+                    return;
+                }
+            }
+            
+            // If validation passes, submit the form
+            await submit();
+            // Clear local storage only after successful submission
+            sessionStorage.removeItem('signupState');
+            sessionStorage.removeItem('advancedClinicFormData');
+            sessionStorage.removeItem('advancedClinicActiveSection');
+        } else {
+            // Go to next section if not the last section
+            goToNextSection();
         }
-      }
-      // If validation passes, submit the form
-      setData({
-        ...data,
-        ...formData
-      });
-      submit();
-      setIsSubmitting(false);
-      setShowErrors(false);
-      return;
+    } catch (error) {
+        console.error('Form submission error:', error);
+        // Optionally show error to user
+        setErrors([{ 
+            id: `submit-error-${Date.now()}`, 
+            message: 'Failed to submit form. Please try again.' 
+        }]);
+        setShowErrors(true);
+    } finally {
+        setIsSubmitting(false);
     }
-
-    // Otherwise, go to next section
-    const progressed = goToNextSection();
-    setIsSubmitting(false);
-    return progressed;
-  };
+};
 
   // Scroll to section
   const scrollToSection = (sectionId) => {
@@ -1217,7 +1259,7 @@ const StepAdvancedClinic = ({ data, setData, submit, back }) => {
                       icon={Map}
                       required
                     />
-                    <div className="space-y-1.5">
+                    <div className="space-y-1.5 mt-1.5">
                       <label className="text-sm font-medium text-gray-300 flex items-center">
                         <MapPin className="w-4 h-4 text-white mr-1.5" />
                         Google Maps Location 
@@ -1329,12 +1371,12 @@ const StepAdvancedClinic = ({ data, setData, submit, back }) => {
                       required
                     />
                     <InputField
-                      label={<><AlertCircle className="w-4 h-4 text-white mr-1.5" /> Emergency Contact (Optional)</>}
+                      label={<><AlertCircle className="w-4 h-4 text-white mr-1.5" /> Emergency Contact</>}
                       name="emergencyPhone"
                       type="tel"
                       pattern="[0-9]{10}"
                       value={formData.emergencyPhone}
-                      onChange={handleChange}
+                      onChange={handleEmergencyPhoneChange}
                       placeholder="e.g. +94 76 123 4567"
                       icon={AlertCircle}
                     />
@@ -1457,39 +1499,80 @@ const StepAdvancedClinic = ({ data, setData, submit, back }) => {
                       icon={Clock}
                     />
 
-                    <div className="space-y-1.5">
-                      <label className="text-sm font-medium text-gray-300 flex items-center">
-                        <UserCheck className="w-4 h-4 text-white mr-1.5" />
-                        Walk-in Availability <span className="text-red-500 ml-1">*</span>
-                      </label>
-                      <div className="flex items-center space-x-6 ml-3">
-                        <label className="inline-flex items-center">
-                          <input
-                            type="radio"
-                            name="walkInAvailable"
-                            checked={formData.walkInAvailable === true}
-                            onChange={() => setFormData(prev => ({
-                              ...prev,
-                              walkInAvailable: true
-                            }))}
-                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-600"
-                          />
-                          <span className="ml-2 text-gray-300">Yes</span>
+                    <div className="space-y-2">
+                      <div className="space-y-1">
+                        <div className="flex items-center">
+                          <UserCheck className="w-4 h-4 text-white mr-2" />
+                          <span className="text-sm font-medium text-gray-300">Walk-in Availability</span>
+                          <div className="group relative ml-1">
+                            <Info className="w-3.5 h-3.5 text-gray-400 cursor-help" />
+                            <div className="absolute left-0 bottom-full mb-2 w-64 p-2 text-xs text-white bg-slate-800 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                              Indicate if patients can visit without an appointment
+                            </div>
+                          </div>
+                          <span className="text-red-500 ml-1">*</span>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center space-x-6 ml-6 mt-2">
+                        <label className="inline-flex items-center group cursor-pointer">
+                          <div className={`relative w-5 h-5 rounded-full border-2 ${formData.walkInAvailable === true ? 'border-blue-500 bg-blue-500' : 'border-gray-500'} transition-colors duration-200 flex items-center justify-center`}>
+                            {formData.walkInAvailable === true && (
+                              <div className="w-2 h-2 bg-white rounded-full"></div>
+                            )}
+                            <input
+                              type="radio"
+                              name="walkInAvailable"
+                              checked={formData.walkInAvailable === true}
+                              onChange={() => setFormData(prev => ({
+                                ...prev,
+                                walkInAvailable: true
+                              }))}
+                              className="absolute inset-0 opacity-0 cursor-pointer"
+                            />
+                          </div>
+                          <span className={`ml-3 text-sm ${formData.walkInAvailable === true ? 'text-white' : 'text-gray-400'}`}>
+                            Yes, we accept walk-ins
+                          </span>
                         </label>
-                        <label className="inline-flex items-center">
-                          <input
-                            type="radio"
-                            name="walkInAvailable"
-                            checked={formData.walkInAvailable === false}
-                            onChange={() => setFormData(prev => ({
-                              ...prev,
-                              walkInAvailable: false
-                            }))}
-                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-600"
-                          />
-                          <span className="ml-2 text-gray-300">No</span>
+                        
+                        <label className="inline-flex items-center group cursor-pointer">
+                          <div className={`relative w-5 h-5 rounded-full border-2 ${formData.walkInAvailable === false ? 'border-blue-500 bg-blue-500' : 'border-gray-500'} transition-colors duration-200 flex items-center justify-center`}>
+                            {formData.walkInAvailable === false && (
+                              <div className="w-2 h-2 bg-white rounded-full"></div>
+                            )}
+                            <input
+                              type="radio"
+                              name="walkInAvailable"
+                              checked={formData.walkInAvailable === false}
+                              onChange={() => setFormData(prev => ({
+                                ...prev,
+                                walkInAvailable: false
+                              }))}
+                              className="absolute inset-0 opacity-0 cursor-pointer"
+                            />
+                          </div>
+                          <span className={`ml-3 text-sm ${formData.walkInAvailable === false ? 'text-white' : 'text-gray-400'}`}>
+                            No, appointment only
+                          </span>
                         </label>
                       </div>
+                      
+                      {formData.walkInAvailable === true && (
+                        <div className="mt-2 ml-6 p-3 bg-blue-900/20 border border-blue-800/50 rounded-lg">
+                          <p className="text-xs text-blue-300">
+                            Great! Patients will know they can visit your clinic without an appointment.
+                          </p>
+                        </div>
+                      )}
+                      
+                      {formData.walkInAvailable === false && (
+                        <div className="mt-2 ml-6 p-3 bg-slate-800/50 border border-slate-700/50 rounded-lg">
+                          <p className="text-xs text-gray-400">
+                            Patients will be informed that appointments are required for all visits.
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </FormSection>
@@ -1888,6 +1971,12 @@ const StepAdvancedClinic = ({ data, setData, submit, back }) => {
                     <label className="text-sm font-medium text-gray-300 flex items-center">
                       <ClipboardCheck className="w-4 h-4 text-white mr-1.5" />
                       Additional Services
+                      <div className="group relative ml-1">
+                        <Info className="w-3.5 h-3.5 text-gray-400 cursor-help" />
+                        <div className="absolute left-0 bottom-full mb-2 w-64 p-2 text-xs text-white bg-slate-800 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                          List any extra services your clinic provides (e.g., home visits, telemedicine, lab tests)
+                        </div>
+                      </div>
                     </label>
                     <div className="flex space-x-2">
                       <div className="relative flex-1">
