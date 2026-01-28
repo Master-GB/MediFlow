@@ -176,7 +176,7 @@ const StepRole = ({ role, setRole, next }) => {
                         <div className="flex items-center gap-1">
                             <span>Already have an account?</span>
                             <a
-                                href="/login"
+                                href="/signIn"
                                 className="text-cyan-400 hover:text-cyan-300 cursor-pointer hover:underline transition-colors font-medium flex items-center gap-1 group"
                             >
                                 Sign In

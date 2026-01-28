@@ -1,7 +1,7 @@
 import { User, Mail, Lock, ArrowLeft, ArrowRight, Shield, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
 import { FaGoogle, FaFacebookF, FaLinkedinIn } from 'react-icons/fa';
 import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 // Animation Variants
 const containerVariants = {

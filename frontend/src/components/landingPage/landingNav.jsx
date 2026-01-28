@@ -172,7 +172,7 @@ const LandingNav = ({ className = '' }) => {
                 Sign Up
               </a>
               <a
-                href="/register"
+                href="/signIn"
                 className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-lg font-bold shadow-md transition-all ${
                   scrolled 
                     ? 'bg-white text-black hover:bg-gray-200' 
