@@ -139,7 +139,7 @@ const VerificationCode = () => {
                                     onChange={(e) => handleChange(e, index)}
                                     onKeyDown={(e) => handleKeyDown(e, index)}
                                     onPaste={handlePaste}
-                                    className="w-12 h-14 text-center text-2xl font-semibold border bg-blue-100 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                                    className="w-12 h-14 text-center text-2xl font-semibold border bg-blue-100 border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                                     disabled={isSubmitting}
                                 />
                             ))}

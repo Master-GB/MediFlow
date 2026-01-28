@@ -5,6 +5,8 @@ import LandingPage from "./pages/landingPage.jsx"
 import Signup from './pages/signUp.jsx';
 import ClinicSignUpSuccess from './pages/ClinicSignUpSuccess.jsx';
 import VerificationCode from './pages/VerificationCode.jsx';
+import SignIn from './pages/signIn.jsx';
+import ForgotPassword from './pages/forgotPass.jsx';
 
 
 const LandingPageLayout = () => {
@@ -16,6 +18,8 @@ const LandingPageLayout = () => {
         <Route path ="/signUp" element ={<Signup/>}/>
         <Route path="/clinic-signup-success" element={<ClinicSignUpSuccess/>}/>
         <Route path="/signUp-verification-code" element={<VerificationCode/>}/>
+        <Route path="/signIn" element={<SignIn/>}/>
+        <Route path="/forgot-password" element={<ForgotPassword/>}/>
       </Routes>
     </div>
     </div>
