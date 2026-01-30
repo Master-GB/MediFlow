@@ -158,61 +158,7 @@ const InputField = ({
   );
 };
 
-// Tag Component
-const Tag = ({ children, onRemove, color = 'blue', icon: Icon }) => {
-  const colorMap = {
-    blue: {
-      bg: 'bg-gradient-to-br from-blue-500/20 to-cyan-500/20',
-      text: 'text-blue-300',
-      border: 'border-blue-500/30',
-      hover: 'hover:from-blue-500/30 hover:to-cyan-500/30'
-    },
-    purple: {
-      bg: 'bg-gradient-to-br from-purple-500/20 to-fuchsia-500/20',
-      text: 'text-purple-300',
-      border: 'border-purple-500/30',
-      hover: 'hover:from-purple-500/30 hover:to-fuchsia-500/30'
-    },
-    green: {
-      bg: 'bg-gradient-to-br from-emerald-500/20 to-teal-500/20',
-      text: 'text-emerald-300',
-      border: 'border-emerald-500/30',
-      hover: 'hover:from-emerald-500/30 hover:to-teal-500/30'
-    },
-    red: {
-      bg: 'bg-gradient-to-br from-rose-500/20 to-pink-500/20',
-      text: 'text-rose-300',
-      border: 'border-rose-500/30',
-      hover: 'hover:from-rose-500/30 hover:to-pink-500/30'
-    }
-  };
 
-  return (
-    <motion.span 
-      initial={{ opacity: 0, y: 10, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
-      whileHover={{ scale: 1.03 }}
-      whileTap={{ scale: 0.98 }}
-      className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-sm font-medium border 
-      ${colorMap[color].bg} ${colorMap[color].text} ${colorMap[color].border} 
-      ${colorMap[color].hover} transition-all duration-200`}
-    >
-      {Icon && <Icon className="w-3.5 h-3.5" />}
-      {children}
-      {onRemove && (
-        <button 
-          type="button" 
-          onClick={onRemove}
-          className="opacity-70 hover:opacity-100 transition-opacity ml-0.5"
-          aria-label={`Remove ${children}`}
-        >
-          <X className="w-3.5 h-3.5" />
-        </button>
-      )}
-    </motion.span>
-  );
-};
 
 const StepAdvancedPatient = ({ data, setData, submit, back }) => {
   // Initialize data with default values if not present
@@ -242,7 +188,7 @@ const StepAdvancedPatient = ({ data, setData, submit, back }) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
-  const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', 'Unknown'];
+  
   
   const allergies = [
     'Penicillin', 'Aspirin', 'Ibuprofen', 'Sulfa Drugs', 'Latex',
@@ -339,6 +285,24 @@ const StepAdvancedPatient = ({ data, setData, submit, back }) => {
         }
         break;
         
+      case 'mobileNumber':
+        if (value) {
+          const phoneRegex = /^[0-9+\-() ]+$/;
+          const digitsOnly = value.replace(/[^0-9]/g, '');
+          
+          if (!phoneRegex.test(value)) {
+            fieldErrors.push('Please enter a valid mobile number');
+            isValid = false;
+          } else if (digitsOnly.length < 8) {
+            fieldErrors.push('Mobile number must be at least 8 digits');
+            isValid = false;
+          } else if (digitsOnly.length > 15) {
+            fieldErrors.push('Mobile number must be less than 15 digits');
+            isValid = false;
+          }
+        }
+        break;
+        
       default:
         break;
     }
@@ -377,6 +341,21 @@ const StepAdvancedPatient = ({ data, setData, submit, back }) => {
     if (name === 'emergencyPhone') {
       // Only allow numbers and +, and limit to 15 characters
       const filteredValue = value.replace(/[^0-9+]/g, '');
+      if (filteredValue.length <= 15) {
+        const newData = {
+          ...data,
+          [name]: filteredValue
+        };
+        setData(newData);
+        validateField(name, filteredValue, [...errorMessages]);
+      }
+      return;
+    }
+    
+    // Special handling for mobile number field
+    if (name === 'mobileNumber') {
+      // Only allow numbers, +, -, (), and space, and limit to 15 characters
+      const filteredValue = value.replace(/[^0-9+\-() ]/g, '');
       if (filteredValue.length <= 15) {
         const newData = {
           ...data,
@@ -566,11 +545,7 @@ const StepAdvancedPatient = ({ data, setData, submit, back }) => {
     }
   };
 
-  const handleBloodPressureChange = (type, value) => {
-    const updatedBP = { ...bloodPressure, [type]: value };
-    setBloodPressure(updatedBP);
-    setData({ ...data, bloodPressure: updatedBP });
-  };
+ 
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -580,7 +555,6 @@ const StepAdvancedPatient = ({ data, setData, submit, back }) => {
     }
     
     setIsSubmitting(true);
-    // Simulate API call
     setTimeout(() => {
       submit();
       setIsSubmitting(false);
@@ -840,6 +814,18 @@ const StepAdvancedPatient = ({ data, setData, submit, back }) => {
               step="0.1"
               icon={Scale}
             />
+
+            <div className="md:col-span-2">
+              <InputField
+                label="Mobile Number"
+                type="tel"
+                name="mobileNumber"
+                value={data.mobileNumber || ''}
+                onChange={handleChange}
+                placeholder="e.g. +94771234567"
+                icon={Phone}
+              />
+            </div>
 
             {data.height && data.weight && (
               <motion.div 

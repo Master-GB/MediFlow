@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import axios from 'axios'
 import StepRole from "../components/signUp/StepRole";
 import StepBasicPatient from "../components/signUp/StepBasicPatient";
 import StepBasicClinic from "../components/signUp/StepBasicClinic";
@@ -14,6 +15,9 @@ const Signup = () => {
   const [direction, setDirection] = useState(1);
   const [role, setRole] = useState("");
   const [formData, setFormData] = useState({});
+  const [errors, setErrors] = useState({});
+  const [showError, setShowError] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const hasMounted = useRef(false);
 
   // Load saved state on component mount
@@ -58,7 +62,7 @@ const Signup = () => {
   };
 
   // Handle form submission
-  const submit = () => {
+  const submit = async () => {
     if (role === 'patient') {
       // Filter out 'Other' from arrays
       const filteredAllergies = filterOutOther(formData.allergies);
@@ -66,59 +70,84 @@ const Signup = () => {
       const filteredConditions = filterOutOther(formData.conditions);
       const filteredHealthGoals = filterOutOther(formData.healthGoals);
 
-      // Create the patient data object with only the specified fields
-      const patientData = {
-        // Basic Information
-        firstName: formData.firstName || '',
-        lastName: formData.lastName || '',
-        email: formData.email || '',
-        password: formData.password || '',
-        confirmPassword: formData.confirmPassword || '',
-        dateOfBirth: formData.dateOfBirth || '',
-        gender: formData.gender || '',
-        height: formData.height || '',
-        weight: formData.weight || '',
-        bmi: formData.bmi || '',
-
-        // Medical Information
-        medicalInfo: {
-          bloodType: formData.bloodType || '',
-          bloodPressure: {
-            systolic: formData.bloodPressure?.systolic || '',
-            diastolic: formData.bloodPressure?.diastolic || ''
-          },
-          allergies: filteredAllergies,
-          medications: filteredMedications,
-          conditions: filteredConditions,
-          lifestyleHabits: {
-            smoking: formData.smokingStatus || '',
-            alcohol: formData.alcoholConsumption || '',
-            exercise: formData.activityLevel || '',
-            diet: formData.dietaryPreference || ''
+      try {
+        axios.defaults.withCredentials = true
+        
+        // 1. AUTH REGISTRATION
+        const response = await axios.post('/api/auth/register',
+          {
+            name: formData.firstName,
+            email: formData.email,
+            password: formData.password,
+            role: 'patient',
           }
-        },
+        )
 
-        // Health Goals
-        healthGoals: filteredHealthGoals,
+        if (response.data.success) {
+          // 2. PATIENT PROFILE CREATION
+          try {
+            const patientProfile = await axios.post('/api/profile/patient-profile-creation', {
+              userRef: response.data.user?._id, // Get user ID from auth response
+              fullName: `${formData.firstName} ${formData.lastName}`,
+              dateOfBirth: formData.dateOfBirth,
+              gender: formData.gender,
+              height: formData.height,
+              weight: formData.weight,
+              mobileNumber:formData.mobileNumber,
+              bloodType: formData.bloodType,
+              medicalInfo: {
+                bloodPressure: {
+                  systolic: formData.bloodPressure?.systolic,
+                  diastolic: formData.bloodPressure?.diastolic
+                },
+                allergies: filteredAllergies,
+                medications: filteredMedications,
+                conditions: filteredConditions
+              },
+              lifestyleHabits: {
+                smoking: formData.smokingStatus,
+                alcohol: formData.alcoholConsumption,
+                exercise: formData.activityLevel,
+                diet: formData.dietaryPreference
+              },
+              healthGoals: filteredHealthGoals,
+              emergencyContact: {
+                name: formData.emergencyName,
+                relationship: formData.emergencyRelationship,
+                phone: formData.emergencyPhone
+              }
+            })
 
-        // Emergency Contact
-        emergencyContact: {
-          name: formData.emergencyName || '',
-          relationship: formData.emergencyRelationship || '',
-          phone: formData.emergencyPhone || ''
+            if (patientProfile.data.success) {
+              console.log('Patient registration and profile created successfully');
+              sessionStorage.removeItem('signupState');
+              navigate(`/signUp-verification-code?email=${encodeURIComponent(formData.email)}`);
+            } else {
+              console.error('Patient profile creation failed:', patientProfile.data.message);
+              alert(`Profile creation failed: ${patientProfile.data.message}`);
+            }
+          } catch (profileError) {
+            console.error('Patient profile creation failed:', profileError);
+            alert(`Profile creation failed: ${profileError.response?.data?.message || 'Unknown error'}`);
+          }
+        } else {
+          console.error('Patient registration failed:', response.data.message);
+          alert(`Registration failed: ${response.data.message}`);
         }
-      };
+      } catch (error) {
+      
+        if (error.response?.data?.isUserExist) {
+          setErrors(prev => ({ ...prev, email: 'Registration failed,Email already exists' }));
+          setShowError(true);
+          return;
+        }
+        
+        const errorMessage = error.response?.data?.message || 'Unknown error';
+        setErrors(prev => ({ ...prev, email: errorMessage }));
+        setShowError(true);
+        return;
+      }
 
-      // Log the data in a clean, readable format
-      console.log('=== PATIENT DATA FOR DB STORAGE ===');
-      console.log(JSON.stringify(patientData, null, 2));
-      console.log('===================================');
-
-      // Clear the form state
-      sessionStorage.removeItem('signupState');
-
-      // Navigate to the patient dashboard
-      navigate(`/signUp-verification-code?email=${encodeURIComponent(formData.email)}`);
 
     } else if (role === 'clinic') {
       // Create the clinic data object with only the specified fields
@@ -239,8 +268,8 @@ const Signup = () => {
       // Clear the form state
       sessionStorage.removeItem('signupState');
 
-     // In signUp.jsx, update the navigation line to:
-navigate(`/clinic-signup-success?email=${encodeURIComponent(formData.email)}`);
+      // In signUp.jsx, update the navigation line to:
+      navigate(`/clinic-signup-success?email=${encodeURIComponent(formData.email)}`);
     }
   };
 
@@ -284,6 +313,17 @@ navigate(`/clinic-signup-success?email=${encodeURIComponent(formData.email)}`);
       }
     })
   };
+
+  // Auto-hide error after 5 seconds
+  useEffect(() => {
+    if (showError) {
+      const timer = setTimeout(() => {
+        setShowError(false);
+      }, 5000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [showError]);
 
   // Show nothing while loading to prevent flash
   if (isLoading) {
@@ -334,7 +374,6 @@ navigate(`/clinic-signup-success?email=${encodeURIComponent(formData.email)}`);
               setData={setFormData}
               submit={() => {
                 submit();
-                resetSignupState();
               }}
               back={() => goToPrevStep(2)}
             />
@@ -346,7 +385,7 @@ navigate(`/clinic-signup-success?email=${encodeURIComponent(formData.email)}`);
               setData={setFormData}
               submit={() => {
                 submit();
-                resetSignupState();
+                //resetSignupState();
               }}
               back={() => goToPrevStep(2)}
             />
@@ -359,22 +398,57 @@ navigate(`/clinic-signup-success?email=${encodeURIComponent(formData.email)}`);
   };
 
   return (
-    <div className="min-h-screen w-screen overflow-x-hidden bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 relative">
-      <AnimatePresence custom={direction} initial={false}>
-        <motion.div
-          key={step}
-          custom={direction}
-          variants={variants}
-          initial="enter"
-          animate="center"
-          exit="exit"
-          className="w-full max-w-screen-2xl mx-auto p-0 m-0 absolute left-0 right-0"
-        >
-          {renderStep()}
-        </motion.div>
-      </AnimatePresence>
-    </div>
+    <>
+      {/* Error Message - Top Right Corner */}
+      {showError && errors.email && (
+        <div style={{
+          position: 'fixed',
+          top: '20px',
+          right: '20px',
+          backgroundColor: '#ef4444',
+          color: 'white',
+          padding: '12px 20px',
+          borderRadius: '8px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+          zIndex: 9999,
+          fontSize: '14px',
+          maxWidth: '300px'
+        }}>
+          {errors.email}
+          <button 
+            onClick={() => setShowError(false)}
+            style={{
+              marginLeft: '10px',
+              background: 'none',
+              border: 'none',
+              color: 'white',
+              cursor: 'pointer',
+              fontSize: '16px'
+            }}
+          >
+            ×
+          </button>
+        </div>
+      )}
+      
+      <div className="min-h-screen w-screen overflow-x-hidden bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 relative">
+        <AnimatePresence custom={direction} initial={false}>
+          <motion.div
+            key={step}
+            custom={direction}
+            variants={variants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            className="w-full max-w-screen-2xl mx-auto p-0 m-0 absolute left-0 right-0"
+          >
+            {renderStep()}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+    </>
   );
+
 };
 
 export default Signup;

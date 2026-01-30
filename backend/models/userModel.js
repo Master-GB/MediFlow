@@ -38,7 +38,12 @@ const userSchema = new mongoose.Schema({
     resetOtpExpiry:{
         type:Number,
         default:0
-    }
+    },
+
+     lastLogin: {
+        type: Date,
+        default: null
+    },
 })
 
 const User = mongoose.models.users || mongoose.model('users',userSchema);

@@ -150,7 +150,7 @@ const ForgotPassword = () => {
     return (
         <div className="min-h-screen bg-[#d9e9fc] flex relative">
             {/* Logo */}
-            <div className="absolute top-0 left-0 z-20 p-4">
+            <div className="absolute top-0 left-0 z-20  -ml-7 -mt-3">
                 <Link
                     to="/"
                     className="flex items-center gap-2"
@@ -163,9 +163,9 @@ const ForgotPassword = () => {
                     <img
                         src="/src/assets/images/logoBlack.png"
                         alt="MediFlow Logo"
-                        className="h-16 w-auto"
+                        className="h-29 w-41"
                     />
-                    <span className="heading2 text-3xl text-black">MediFlow</span>
+                    <span className="heading2 text-3xl text-black -ml-11">MediFlow</span>
                 </Link>
             </div>
 
@@ -183,7 +183,7 @@ const ForgotPassword = () => {
                 {/* Close button */}
                 <Link
                     to="/signin"
-                    className="absolute top-6 right-6 text-red-600 hover:text-red-700 transition-colors z-20"
+                    className="absolute top-6 right-0 text-red-600 hover:text-red-700 transition-colors z-20"
                     onClick={() => {
                         // Clear the saved state when explicitly navigating away
                         localStorage.removeItem(FORGOT_PW_STEP_KEY);
@@ -208,6 +208,11 @@ const ForgotPassword = () => {
                         <Link
                             to="/signin"
                             className="font-medium text-blue-500 hover:text-blue-600 hover:underline transition-colors inline-flex items-center group"
+                             onClick={() => {
+                        // Clear the saved state when explicitly navigating away
+                        localStorage.removeItem(FORGOT_PW_STEP_KEY);
+                        localStorage.removeItem(FORGOT_PW_EMAIL_KEY);
+                    }}
                         >
                             Sign in
                             <ArrowRight className="mt-1 h-4 w-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-200" />

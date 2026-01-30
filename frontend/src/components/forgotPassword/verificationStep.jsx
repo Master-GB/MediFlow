@@ -104,7 +104,7 @@ const VerificationStep = ({ code, setCode, onVerify, onResend, isLoading, email,
               setCode(value);
             }}
             placeholder="Enter 6-digit code"
-            className="block w-full pl-10 pr-3 py-3 bg-blue-100 border border-blue-400 rounded-2xl text-black placeholder-black/70 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none  text-center text-xl tracking-widest"
+            className="block w-full pl-3 pr-3 py-3 text-center bg-blue-100 border border-blue-400 rounded-2xl text-black placeholder-black/70 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none  text-xl tracking-widest"
           />
         </div>
 
