@@ -829,9 +829,9 @@ const StepAdvancedClinic = ({ data, setData, submit, back }) => {
             // If validation passes, submit the form
             await submit();
             // Clear local storage only after successful submission
-            sessionStorage.removeItem('signupState');
-            sessionStorage.removeItem('advancedClinicFormData');
-            sessionStorage.removeItem('advancedClinicActiveSection');
+            // sessionStorage.removeItem('signupState');
+            // sessionStorage.removeItem('advancedClinicFormData');
+            // sessionStorage.removeItem('advancedClinicActiveSection');
         } else {
             // Go to next section if not the last section
             goToNextSection();

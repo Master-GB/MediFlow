@@ -2,7 +2,7 @@
 
 const clinicSchema = new mongoose.Schema({
 
-    clinicBasic:{
+    clinicBasicData:{
          clinicName: {
         type: String,
         required: true,
@@ -68,7 +68,7 @@ const clinicSchema = new mongoose.Schema({
             required: true
         },
         consultationDuration: Number,
-        walkInAvailable: String
+        walkInAvailable: Boolean
     },
     
     // Staff & Doctors (nested structure)

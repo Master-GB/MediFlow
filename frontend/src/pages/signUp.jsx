@@ -71,8 +71,10 @@ const Signup = () => {
       const filteredHealthGoals = filterOutOther(formData.healthGoals);
 
       try {
+
+        //for cookie send
         axios.defaults.withCredentials = true
-        
+
         // 1. AUTH REGISTRATION
         const response = await axios.post('/api/auth/register',
           {
@@ -93,7 +95,7 @@ const Signup = () => {
               gender: formData.gender,
               height: formData.height,
               weight: formData.weight,
-              mobileNumber:formData.mobileNumber,
+              mobileNumber: formData.mobileNumber,
               bloodType: formData.bloodType,
               medicalInfo: {
                 bloodPressure: {
@@ -135,13 +137,13 @@ const Signup = () => {
           alert(`Registration failed: ${response.data.message}`);
         }
       } catch (error) {
-      
+
         if (error.response?.data?.isUserExist) {
           setErrors(prev => ({ ...prev, email: 'Registration failed,Email already exists' }));
           setShowError(true);
           return;
         }
-        
+
         const errorMessage = error.response?.data?.message || 'Unknown error';
         setErrors(prev => ({ ...prev, email: errorMessage }));
         setShowError(true);
@@ -265,11 +267,108 @@ const Signup = () => {
       console.log(JSON.stringify(clinicData, null, 2));
       console.log('==================================');
 
-      // Clear the form state
-      sessionStorage.removeItem('signupState');
+      try {
+        axios.defaults.withCredentials = true
 
-      // In signUp.jsx, update the navigation line to:
-      navigate(`/clinic-signup-success?email=${encodeURIComponent(formData.email)}`);
+        // 1. AUTH REGISTRATION
+        const response = await axios.post('/api/auth/register',
+          {
+            name: formData.clinicName,
+            email: formData.email,
+            password: formData.password,
+            role: 'clinic',
+          }
+        )
+
+        if (response.data.success) {
+
+          try {
+            const clinicProfile = await axios.post('/api/profile/clinic-profile-creation', {
+              clinicBasicData: {
+                clinicName: formData.clinicName,
+                clinicType: formData.clinicType,
+                specialties: formData.specialties,
+                yearEstablished: parseInt(formData.yearEstablished),
+                clinicDescription: formData.clinicDescription,
+              },
+              contactInfo: {
+                phone: formData.phone,
+                emergencyPhone: formData.emergencyPhone,
+                address: {
+                  street: formData.street,
+                  city: formData.city,
+                  province: formData.province,
+                  country: 'Sri Lanka',
+                  googleMapsLink: formData.googleMapsLink
+                }
+              },
+              operatingHours: {
+                workingDays: formData.workingDays,
+                openingTime: formData.openingTime,
+                closingTime: formData.closingTime,
+                consultationDuration: parseInt(formData.consultationDuration) ,
+                walkInAvailable: Boolean(formData.walkInAvailable)
+              },
+              staffInfo: {
+                totalDoctors: formData.numberOfDoctors,
+                totalStaff: formData.numberOfStaff,
+                leadDoctor: {
+                  leadDoctorName: formData.leadDoctorName,
+                  leadDoctorSpecialty: formData.leadDoctorSpecialty,
+                  leadDoctorRegistration: formData.leadDoctorRegistration
+                }
+              },
+              legalVerification: {
+                registrationNumber: formData.registrationNumber,
+                verificationDocument: "tets.later will change",
+              },
+              facilities: {
+                availableFacilities: formData.facilities,
+                additionalServices: formData.additionalServices,
+              },
+              languages: Array.isArray(formData.languages) ? formData.languages : ['Sinhala'],
+              branding: {
+                logo: "test,leter will change",
+                themeColor: formData.themeColor,
+              },
+              notifications: {
+                emailNotifications: Boolean(formData.emailNotifications),
+                smsNotifications: Boolean(formData.smsNotifications),
+              },
+              userRef: response.data.user?._id,
+            })
+
+            if (clinicProfile.data.success) {
+              sessionStorage.removeItem('signupState');
+              sessionStorage.removeItem('advancedClinicFormData');
+              sessionStorage.removeItem('advancedClinicActiveSection');
+              navigate(`/clinic-signup-success?email=${encodeURIComponent(formData.email)}`);
+              console.log('Clinic registration and profile created successfully');
+            } else {
+              console.error('Clinic profile creation failed:', clinicProfile.data.message);
+              alert(`Profile creation failed: ${clinicProfile.data.message}`);
+            }
+          } catch (profileError) {
+            console.error('Clinic profile creation failed:', profileError);
+            alert(`Profile creation failed: ${profileError.response?.data?.message || 'Unknown error'}`);
+          }
+        } else {
+          console.error('Clinic registration failed:', response.data.message);
+          alert(`Registration failed: ${response.data.message}`);
+        }
+      } catch (error) {
+        
+        if (error.response?.data?.isUserExist) {
+          setErrors(prev => ({ ...prev, email: 'Registration failed,Email already exists' }));
+          setShowError(true);
+          return;
+        }
+
+        const errorMessage = error.response?.data?.message || 'Unknown error';
+        setErrors(prev => ({ ...prev, email: errorMessage }));
+        setShowError(true);
+        return;
+      }
     }
   };
 
@@ -320,7 +419,7 @@ const Signup = () => {
       const timer = setTimeout(() => {
         setShowError(false);
       }, 5000);
-      
+
       return () => clearTimeout(timer);
     }
   }, [showError]);
@@ -415,7 +514,7 @@ const Signup = () => {
           maxWidth: '300px'
         }}>
           {errors.email}
-          <button 
+          <button
             onClick={() => setShowError(false)}
             style={{
               marginLeft: '10px',
@@ -430,7 +529,7 @@ const Signup = () => {
           </button>
         </div>
       )}
-      
+
       <div className="min-h-screen w-screen overflow-x-hidden bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 relative">
         <AnimatePresence custom={direction} initial={false}>
           <motion.div
