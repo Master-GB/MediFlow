@@ -35,7 +35,7 @@ const ClinicSignupSuccess = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-slate-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-linear-to-br from-gray-900 to-slate-900 flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -44,7 +44,7 @@ const ClinicSignupSuccess = () => {
       >
         <div className="bg-slate-800/80 backdrop-blur-sm rounded-2xl overflow-hidden border border-slate-700/50 shadow-2xl">
           {/* Header */}
-          <div className="bg-gradient-to-r from-amber-600 to-orange-600 p-6 text-center">
+          <div className="bg-linear-to-r from-amber-600 to-orange-600 p-6 text-center">
             <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4">
               <Clock className="h-12 w-12 text-white" strokeWidth={1.5} />
             </div>
@@ -97,7 +97,7 @@ const ClinicSignupSuccess = () => {
             >
               <button
                 onClick={() => navigate('/')}
-                className="w-full bg-slate-700/50 hover:bg-slate-700/70 text-white font-medium py-3 px-6 rounded-lg transition-all duration-300 flex items-center justify-center group"
+                className="w-full bg-slate-700/50 hover:bg-slate-700/70 hover:cursor-pointer text-white font-medium py-3 px-6 rounded-lg transition-all duration-300 flex items-center justify-center group"
               >
                 <Home className="h-5 w-5 mr-2" />
                 Back to Home

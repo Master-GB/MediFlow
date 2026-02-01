@@ -558,7 +558,7 @@ const StepAdvancedPatient = ({ data, setData, submit, back }) => {
     setTimeout(() => {
       submit();
       setIsSubmitting(false);
-    }, 800);
+    }, 1000);
   };
 
   useEffect(() => {

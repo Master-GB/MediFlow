@@ -123,6 +123,138 @@ export const logoutUser = async (req, res) => {
   }
 };
 
+export const deleteUserWithProfile = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        message: "User ID is required"
+      });
+    }
+
+    // Import models dynamically to avoid circular dependencies
+    const User = (await import('../models/userModel.js')).default;
+    const Patient = (await import('../models/patientModel.js')).default;
+    const Clinic = (await import('../models/clinicModel.js')).default;
+    const Doctor = (await import('../models/doctorModel.js')).default;
+    const Pharmacist = (await import('../models/pharmacistModel.js')).default;
+
+    // Find the user first
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
+      });
+    }
+
+    // Delete associated profile based on user role
+    let profileDeleted = false;
+    
+    switch (user.role) {
+      case 'patient':
+        const patientResult = await Patient.deleteOne({ userRef: userId });
+        profileDeleted = patientResult.deletedCount > 0;
+        break;
+      case 'clinic':
+        const clinicResult = await Clinic.deleteOne({ userRef: userId });
+        profileDeleted = clinicResult.deletedCount > 0;
+        break;
+      case 'doctor':
+        const doctorResult = await Doctor.deleteOne({ userRef: userId });
+        profileDeleted = doctorResult.deletedCount > 0;
+        break;
+      case 'pharmacist':
+        const pharmacistResult = await Pharmacist.deleteOne({ userRef: userId });
+        profileDeleted = pharmacistResult.deletedCount > 0;
+        break;
+    }
+
+    // Delete the user
+    const userResult = await User.deleteOne({ _id: userId });
+
+    if (userResult.deletedCount === 0) {
+      return res.status(500).json({
+        success: false,
+        message: "Failed to delete user"
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "User deleted successfully",
+      data: {
+        userDeleted: true,
+        profileDeleted: profileDeleted,
+        userRole: user.role
+      }
+    });
+
+  } catch (error) {
+    console.error('Delete user error:', error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message
+    });
+  }
+};
+
+export const deleteAuthUserAccount = async(req,res) =>{
+  try {
+    const { userId } = req.params;
+    
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        message: "User ID is required"
+      });
+    }
+
+    // Import userModel dynamically
+    const User = (await import('../models/userModel.js')).default;
+
+    // Find and delete the user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
+      });
+    }
+
+    // Delete only the auth user account
+    const deleteResult = await User.deleteOne({ _id: userId });
+
+    if (deleteResult.deletedCount === 0) {
+      return res.status(500).json({
+        success: false,
+        message: "Failed to delete user account"
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Auth user account deleted successfully",
+      data: {
+        userDeleted: true,
+        deletedUserRole: user.role,
+        deletedUserEmail: user.email
+      }
+    });
+
+  } catch (error) {
+    console.error('Delete auth user account error:', error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message
+    });
+  }
+};
+
 export const sendOTP = async (req, res) => {
   const id = req.user.id;
 

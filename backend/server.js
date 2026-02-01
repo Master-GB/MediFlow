@@ -12,7 +12,7 @@ dotenv.config();
 
 const app = express();
 
-const allowedOrigins = ['http://localhost:5173/', '']
+const allowedOrigins = ['http://localhost:5173', 'http://localhost:5173/']
 
 app.use(cookieParser());
 app.use(cors({ origin: allowedOrigins ,credentials:true}));
@@ -26,6 +26,32 @@ app.get('/',(req,res)=>{ res.send("API is running...");});
 app.use('/api/auth',authRoutes);
 app.use('/api/user',userRouter);
 app.use('/api/profile',userProfileRouter);
+
+app.use((err, req, res, next) => {
+    if (!err) return next();
+
+    if (err.name === 'MulterError') {
+        return res.status(400).json({
+            success: false,
+            message: 'File upload error',
+            error: err.message,
+        });
+    }
+
+    if (typeof err.message === 'string' && err.message.includes('Only images')) {
+        return res.status(400).json({
+            success: false,
+            message: 'Invalid file type',
+            error: err.message,
+        });
+    }
+
+    return res.status(500).json({
+        success: false,
+        message: 'Server error',
+        error: err.message,
+    });
+});
 
 app.listen(PORT,()=>{
     console.log(`Server is running on port ${PORT}`);
