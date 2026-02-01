@@ -320,14 +320,7 @@ doctorSchema.virtual('currentAffiliations').get(function() {
     return this.affiliations.filter(aff => aff.isCurrent);
 });
 
-// Indexes for better performance (remove duplicates from unique fields)
-doctorSchema.index({ firstName: 1, lastName: 1 });
-doctorSchema.index({ 'professionalInfo.specialization': 1 });
-// medicalRegistrationNumber already has unique: true, no need for separate index
-doctorSchema.index({ verificationStatus: 1 });
-doctorSchema.index({ 'statistics.averageRating': 1 });
-doctorSchema.index({ 'contactInfo.address.city': 1 });
 
-const Doctor = BaseUser.discriminator('doctor', doctorSchema);
+const User = mongoose.models.doctor || mongoose.model('doctorProfile',doctorSchema);
 
 export default Doctor;

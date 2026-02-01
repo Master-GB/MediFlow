@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import BaseUser from './baseUserModel.js';
+
 
 const pharmacistSchema = new mongoose.Schema({
     // Basic Information
@@ -419,14 +419,7 @@ pharmacistSchema.virtual('currentAffiliations').get(function() {
     return this.affiliations.filter(aff => aff.isCurrent);
 });
 
-// Indexes for better performance (remove duplicates from unique fields)
-pharmacistSchema.index({ firstName: 1, lastName: 1 });
-pharmacistSchema.index({ 'professionalInfo.specialization': 1 });
-pharmacistSchema.index({ verificationStatus: 1 });
-pharmacistSchema.index({ 'statistics.averageRating': 1 });
-pharmacistSchema.index({ 'contactInfo.address.city': 1 });
-// pharmacyRegistrationNumber and licenseNumber already have unique: true
 
-const Pharmacist = BaseUser.discriminator('pharmacist', pharmacistSchema);
+const User = mongoose.models.pharmacist || mongoose.model('pharmacistProfile',pharmacistSchema);
 
 export default Pharmacist;

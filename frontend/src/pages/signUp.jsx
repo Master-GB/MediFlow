@@ -127,10 +127,16 @@ const Signup = () => {
             } else {
               console.error('Patient profile creation failed:', patientProfile.data.message);
               alert(`Profile creation failed: ${patientProfile.data.message}`);
+               await axios.delete('/api/auth/delete-auth-user/' + response.data.user?._id, {
+                withCredentials: true
+              })
             }
           } catch (profileError) {
             console.error('Patient profile creation failed:', profileError);
             alert(`Profile creation failed: ${profileError.response?.data?.message || 'Unknown error'}`);
+             await axios.delete('/api/auth/delete-auth-user/' + response.data.user?._id, {
+                withCredentials: true
+              })
           }
         } else {
           console.error('Patient registration failed:', response.data.message);
@@ -152,120 +158,11 @@ const Signup = () => {
 
 
     } else if (role === 'clinic') {
-      // Create the clinic data object with only the specified fields
-      const clinicData = {
-        // ===== BASIC INFORMATION =====
-        basicInfo: {
-          clinicName: formData.clinicName || '',
-          email: formData.email || '',
-          password: formData.password || '',
-          confirmPassword: formData.confirmPassword || '',
 
-          // Clinic Details
-          clinicType: formData.clinicType || '',
-          specialties: Array.isArray(formData.specialties) ? formData.specialties : [],
-          yearEstablished: formData.yearEstablished || '',
-          clinicDescription: formData.clinicDescription || '',
-        },
+      const filterSpecialties = filterOutOther(formData.specialties);
+      const filtereAvailableFacilities = filterOutOther(formData.facilities);
+      const filtereAdditionalServices = filterOutOther(formData.additionalServices);
 
-        // ===== CONTACT & LOCATION =====
-        contactInfo: {
-          // Primary Address
-          address: {
-            street: formData.street || '',
-            city: formData.city || '',
-            province: formData.province || '',
-            googleMapsLink: formData.googleMapsLink || ''
-          },
-
-          // Contact Numbers
-          phone: formData.phone || '',
-          emergencyPhone: formData.emergencyPhone || '',
-        },
-
-        // ===== OPERATING HOURS =====
-        operatingData: {
-          // Regular Hours
-
-          workingDays: formData.workingDays || '',
-          openingTime: formData.openingTime || '08.00 AM',
-          closingTime: formData.closingTime || '05.00 Pm',
-
-
-          consultationDuration: formData.consultationDuration || '', // in minutes
-          walkInAvailable: formData.walkInAvailable || 'false'
-        },
-
-        // ===== STAFF & DOCTORS =====
-        staffInfo: {
-          // Summary
-          totalDoctors: formData.numberOfDoctors || 0,
-          totalStaff: formData.numberOfStaff || 0,
-
-          // Doctors List
-          leadDoctor: {
-            leadDoctorName: formData.leadDoctorName || '',
-            leadDoctorSpecialty: formData.leadDoctorSpecialty || '',
-            leadDoctorRegistration: formData.leadDoctorRegistration || '',
-          }
-
-
-        },
-
-        // ===== FACILITIES & SERVICES =====
-        facilities: {
-          // Available Facilities
-          availableFacilities: Array.isArray(formData.facilities) ? formData.facilities : [
-            ''
-          ],
-
-
-          // Additional Services
-          additionalServices: Array.isArray(formData.additionalServices) ? formData.additionalServices : [
-            ''
-          ],
-
-        },
-
-        // ===== LANGUAGES & ACCESSIBILITY =====
-        languages: {
-          // Languages Spoken
-          languages: Array.isArray(formData.languages) ? formData.languages : [
-            'Sinhala'
-          ],
-        },
-
-        // ===== REGISTRATION & COMPLIANCE =====
-        registration: {
-
-          registrationNumber: formData.registrationNumber || '',
-          verificationDocument: formData.verificationDocument || '',
-
-
-        },
-
-        // ===== BRANDING & APPEARANCE =====
-        branding: {
-          // Visual Identity
-          logo: formData.logo || '',
-          themeColor: formData.themeColor || '#3B82F6',
-        },
-
-        // ===== PREFERENCES & SETTINGS =====
-
-        notifications: {
-          emailNotifications: formData.emailNotifications || 'false',
-          smsNotifications: formData.smsNotifications || 'false'
-
-        },
-
-
-      };
-
-      // Log the data in a clean, readable format
-      console.log('=== CLINIC DATA FOR DB STORAGE ===');
-      console.log(JSON.stringify(clinicData, null, 2));
-      console.log('==================================');
 
       try {
         axios.defaults.withCredentials = true
@@ -283,11 +180,12 @@ const Signup = () => {
         if (response.data.success) {
 
           try {
-            const clinicProfile = await axios.post('/api/profile/clinic-profile-creation', {
+
+            const clinicData = {
               clinicBasicData: {
                 clinicName: formData.clinicName,
                 clinicType: formData.clinicType,
-                specialties: formData.specialties,
+                specialties: filterSpecialties,
                 yearEstablished: parseInt(formData.yearEstablished),
                 clinicDescription: formData.clinicDescription,
               },
@@ -299,15 +197,15 @@ const Signup = () => {
                   city: formData.city,
                   province: formData.province,
                   country: 'Sri Lanka',
-                  googleMapsLink: formData.googleMapsLink
-                }
+                  googleMapsLink: formData.googleMapsLink,
+                },
               },
               operatingHours: {
                 workingDays: formData.workingDays,
                 openingTime: formData.openingTime,
                 closingTime: formData.closingTime,
-                consultationDuration: parseInt(formData.consultationDuration) ,
-                walkInAvailable: Boolean(formData.walkInAvailable)
+                consultationDuration: parseInt(formData.consultationDuration),
+                walkInAvailable: Boolean(formData.walkInAvailable),
               },
               staffInfo: {
                 totalDoctors: formData.numberOfDoctors,
@@ -315,20 +213,18 @@ const Signup = () => {
                 leadDoctor: {
                   leadDoctorName: formData.leadDoctorName,
                   leadDoctorSpecialty: formData.leadDoctorSpecialty,
-                  leadDoctorRegistration: formData.leadDoctorRegistration
-                }
+                  leadDoctorRegistration: formData.leadDoctorRegistration,
+                },
               },
               legalVerification: {
                 registrationNumber: formData.registrationNumber,
-                verificationDocument: "tets.later will change",
               },
               facilities: {
-                availableFacilities: formData.facilities,
-                additionalServices: formData.additionalServices,
+                availableFacilities: filtereAvailableFacilities,
+                additionalServices: filtereAdditionalServices,
               },
               languages: Array.isArray(formData.languages) ? formData.languages : ['Sinhala'],
               branding: {
-                logo: "test,leter will change",
                 themeColor: formData.themeColor,
               },
               notifications: {
@@ -336,28 +232,85 @@ const Signup = () => {
                 smsNotifications: Boolean(formData.smsNotifications),
               },
               userRef: response.data.user?._id,
+            };
+
+
+
+            if (!formData.verificationDocument || formData.verificationDocument === '' || !(formData.verificationDocument instanceof File)) {
+              console.log('Verification document missing or invalid - showing error');
+              setErrors(prev => ({ ...prev, verificationDocument: 'Registration failed,Verification Document not exists' }));
+              setShowError(true);
+
+              await axios.delete('/api/auth/delete-auth-user/' + response.data.user?._id, {
+                withCredentials: true
+              })
+              return;
+            }
+            const payload = new FormData();
+            payload.append('clinicData', JSON.stringify(clinicData));
+            if (formData.logo && formData.logo instanceof File) {
+              payload.append('logo', formData.logo);
+            }
+            if (formData.verificationDocument && formData.verificationDocument instanceof File) {
+              payload.append('verificationDocument', formData.verificationDocument);
+            }
+
+            const clinicProfile = await axios.post('/api/profile/clinic-profile-creation', payload, {
+              withCredentials: true,
             })
 
             if (clinicProfile.data.success) {
               sessionStorage.removeItem('signupState');
               sessionStorage.removeItem('advancedClinicFormData');
               sessionStorage.removeItem('advancedClinicActiveSection');
+
+
+              // Revoke object URLs to avoid memory leaks
+              try {
+                if (formData.logoPreview) URL.revokeObjectURL(formData.logoPreview);
+                if (formData.verificationDocumentPreview) URL.revokeObjectURL(formData.verificationDocumentPreview);
+                if (formData.verificationDocumentUrl) URL.revokeObjectURL(formData.verificationDocumentUrl);
+              } catch (_) { }
+
               navigate(`/clinic-signup-success?email=${encodeURIComponent(formData.email)}`);
               console.log('Clinic registration and profile created successfully');
             } else {
               console.error('Clinic profile creation failed:', clinicProfile.data.message);
-              alert(`Profile creation failed: ${clinicProfile.data.message}`);
+              const backendMessage = clinicProfile.response?.data?.message;
+              const backendError = clinicProfile.response?.data?.error;
+              const errorMessage = backendMessage || backendError || clinicProfile.message || 'Unknown error';
+              alert(`Profile creation failed: ${errorMessage}`);
+               await axios.delete('/api/auth/delete-auth-user/' + response.data.user?._id, {
+                withCredentials: true
+              })
             }
           } catch (profileError) {
+
+            if (profileError.response?.data?.isRegExist) {
+              setErrors(prev => ({ ...prev, registrationNumber: 'Registration failed,registration Number already exists' }));
+              setShowError(true);
+               await axios.delete('/api/auth/delete-auth-user/' + response.data.user?._id, {
+                withCredentials: true
+              })
+              return;
+            }
+
             console.error('Clinic profile creation failed:', profileError);
-            alert(`Profile creation failed: ${profileError.response?.data?.message || 'Unknown error'}`);
+            const backendMessage = profileError.response?.data?.message;
+            const backendError = profileError.response?.data?.error;
+            const errorMessage = backendMessage || backendError || profileError.message || 'Unknown error';
+            alert(`Profile creation failed: ${errorMessage}`);
+             await axios.delete('/api/auth/delete-auth-user/' + response.data.user?._id, {
+                withCredentials: true
+              })
+
           }
         } else {
           console.error('Clinic registration failed:', response.data.message);
           alert(`Registration failed: ${response.data.message}`);
         }
       } catch (error) {
-        
+
         if (error.response?.data?.isUserExist) {
           setErrors(prev => ({ ...prev, email: 'Registration failed,Email already exists' }));
           setShowError(true);
@@ -482,8 +435,8 @@ const Signup = () => {
             <StepAdvancedClinic
               data={formData}
               setData={setFormData}
-              submit={() => {
-                submit();
+              submit={async () => {
+                await submit();
                 //resetSignupState();
               }}
               back={() => goToPrevStep(2)}
@@ -499,7 +452,7 @@ const Signup = () => {
   return (
     <>
       {/* Error Message - Top Right Corner */}
-      {showError && errors.email && (
+      {showError && (errors.email || errors.registrationNumber || errors.verificationDocument) && (
         <div style={{
           position: 'fixed',
           top: '20px',
@@ -511,9 +464,9 @@ const Signup = () => {
           boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
           zIndex: 9999,
           fontSize: '14px',
-          maxWidth: '300px'
+          maxWidth: '500px'
         }}>
-          {errors.email}
+          {errors.email || errors.registrationNumber || errors.verificationDocument}
           <button
             onClick={() => setShowError(false)}
             style={{

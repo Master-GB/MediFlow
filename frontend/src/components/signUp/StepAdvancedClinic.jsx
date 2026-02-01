@@ -404,72 +404,104 @@ const StepAdvancedClinic = ({ data, setData, submit, back }) => {
 
   // Handle file selection
   const handleFileSelect = (file, name = 'verificationDocument') => {
-    if (!file) return;
+  if (!file) return;
 
-    // Clear any previous errors
-    if (name === 'logo') {
-      setLogoError('');
-    } else {
-      setFileError('');
+  // Handle LOGO upload
+  if (name === 'logo') {
+    setLogoError('');
+    
+    // Validate logo file
+    const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
+    const maxSize = 5 * 1024 * 1024; // 5MB
+
+    if (!validTypes.includes(file.type)) {
+      setLogoError('Invalid file type. Please upload a PNG, JPG, or WebP image.');
+      const fileInput = document.getElementById('logo-upload');
+      if (fileInput) fileInput.value = '';
+      return;
     }
 
-    // Validate file
-    if (name === 'logo') {
-      // Special validation for logo
-      const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
-      const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+      setLogoError('File is too large. Maximum size is 5MB.');
+      const fileInput = document.getElementById('logo-upload');
+      if (fileInput) fileInput.value = '';
+      return;
+    }
 
-      if (!validTypes.includes(file.type)) {
-        setLogoError('Invalid file type. Please upload a PNG, JPG, or WebP image.');
-        // Reset file input
-        const fileInput = document.getElementById('logo-upload');
-        if (fileInput) fileInput.value = '';
-        return;
-      }
+    // Revoke previous logo preview
+    try {
+      if (formData.logoPreview) URL.revokeObjectURL(formData.logoPreview);
+    } catch (_) {}
 
-      if (file.size > maxSize) {
-        setLogoError('File is too large. Maximum size is 5MB.');
-        // Reset file input
-        const fileInput = document.getElementById('logo-upload');
-        if (fileInput) fileInput.value = '';
-        return;
-      }
-    } else if (!validateFile(file)) {
-      // For other file types (verification documents)
+    // Create preview and store file for database
+    const logoPreview = URL.createObjectURL(file);
+    
+    setFormData(prev => ({
+      ...prev,
+      logo: file,                    // ✅ Store File object for database
+      logoPreview: logoPreview,     // ✅ Store preview for UI
+      logoName: file.name,          // ✅ Store filename
+      logoType: file.type           // ✅ Store MIME type
+    }));
+  }
+  
+  // Handle VERIFICATION DOCUMENT upload
+  else if (name === 'verificationDocument') {
+    setFileError('');
+    
+    // Validate verification document
+    if (!validateFile(file)) {
       const fileInput = document.getElementById('verification-document');
       if (fileInput) fileInput.value = '';
       return;
     }
 
-    // Revoke any previous object URLs to avoid leaks
+    // Revoke previous document previews
     try {
-      const prevPreview = formData[`${name}Preview`];
-      const prevUrl = formData[`${name}Url`];
-      if (prevPreview) URL.revokeObjectURL(prevPreview);
-      if (prevUrl) URL.revokeObjectURL(prevUrl);
-    } catch (_) {
-      // ignore revoke errors
+      if (formData.verificationDocumentPreview) URL.revokeObjectURL(formData.verificationDocumentPreview);
+      if (formData.verificationDocumentUrl) URL.revokeObjectURL(formData.verificationDocumentUrl);
+    } catch (_) {}
+
+    // Handle different file types for verification document
+    if (file.type.startsWith('image/')) {
+      // Image document - create preview
+      const docPreview = URL.createObjectURL(file);
+      
+      setFormData(prev => ({
+        ...prev,
+        verificationDocument: file,                    // ✅ Store File object for database
+        verificationDocumentPreview: docPreview,        // ✅ Store image preview
+        verificationDocumentUrl: docPreview,           // ✅ Store URL for UI
+        verificationDocumentName: file.name,           // ✅ Store filename
+        verificationDocumentType: file.type            // ✅ Store MIME type
+      }));
+    } 
+    else if (file.type === 'application/pdf') {
+      // PDF document - create URL for PDF viewer
+      const docUrl = URL.createObjectURL(file);
+      
+      setFormData(prev => ({
+        ...prev,
+        verificationDocument: file,                    // ✅ Store File object for database
+        verificationDocumentPreview: null,              // ✅ No image preview for PDF
+        verificationDocumentUrl: docUrl,               // ✅ Store URL for PDF viewer
+        verificationDocumentName: file.name,           // ✅ Store filename
+        verificationDocumentType: file.type            // ✅ Store MIME type
+      }));
     }
-
-    // Create a preview URL for images
-    const filePreview = file.type.startsWith('image/')
-      ? URL.createObjectURL(file)
-      : null;
-
-    // For PDFs, create an object URL for preview
-    const fileUrl = file.type === 'application/pdf'
-      ? URL.createObjectURL(file)
-      : filePreview;
-
-    setFormData(prev => ({
-      ...prev,
-      [name]: file,
-      [`${name}Preview`]: filePreview,
-      [`${name}Url`]: fileUrl,
-      [`${name}Name`]: file.name,
-      [`${name}Type`]: file.type
-    }));
-  };
+    else {
+      // Other file types - store file but no preview
+      setFormData(prev => ({
+        ...prev,
+        verificationDocument: file,                    // ✅ Store File object for database
+        verificationDocumentPreview: null,              // ✅ No preview
+        verificationDocumentUrl: null,                 // ✅ No URL
+        verificationDocumentName: file.name,           // ✅ Store filename
+        verificationDocumentType: file.type            // ✅ Store MIME type
+      }));
+    }
+  }
+};
 
   // Handle drag events
   const handleDrag = (e) => {
@@ -800,7 +832,6 @@ const StepAdvancedClinic = ({ data, setData, submit, back }) => {
   // Handle form submission
  const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
     setShowErrors(false);
     setErrors([]);
 
@@ -821,17 +852,17 @@ const StepAdvancedClinic = ({ data, setData, submit, back }) => {
                         element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }
                     setShowErrors(true);
-                    setIsSubmitting(false);
                     return;
                 }
             }
             
-            // If validation passes, submit the form
-            await submit();
-            // Clear local storage only after successful submission
-            // sessionStorage.removeItem('signupState');
-            // sessionStorage.removeItem('advancedClinicFormData');
-            // sessionStorage.removeItem('advancedClinicActiveSection');
+            // If validation passes, set submitting state and submit the form
+            setIsSubmitting(true);
+            try {
+                await submit();
+            } finally {
+                setIsSubmitting(false);
+            }
         } else {
             // Go to next section if not the last section
             goToNextSection();
@@ -844,8 +875,6 @@ const StepAdvancedClinic = ({ data, setData, submit, back }) => {
             message: 'Failed to submit form. Please try again.' 
         }]);
         setShowErrors(true);
-    } finally {
-        setIsSubmitting(false);
     }
 };
 
@@ -2210,9 +2239,9 @@ const StepAdvancedClinic = ({ data, setData, submit, back }) => {
                       <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-2 border border-transparent text-sm cursor-pointer font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                       >
-                        {isSubmitting ? 'Saving...' : 'Complete Registration'}
+                        {isSubmitting ? 'Processing...' : 'Complete Registration'}
                         <Check className="h-4 w-4 ml-2" />
                       </button>
                     )}
