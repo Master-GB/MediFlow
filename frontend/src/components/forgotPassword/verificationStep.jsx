@@ -87,8 +87,8 @@ const VerificationStep = ({ code, setCode, onVerify, onResend, isLoading, email,
       className="w-full"
     >
       <div className="text-left mb-8">
-        <h2 className="text-5xl font-bold text-black mb-2">Verify <br/>Your Email</h2>
-        <p className="text-black/70">We've sent a 6-digit code to {email}</p>
+        <h2 className="text-5xl font-bold text-white mb-2">Verify <br/>Your Email</h2>
+        <p className="text-white/70">We've sent a 6-digit code to {email}</p>
       </div>
 
       <div className="space-y-6">
@@ -104,7 +104,7 @@ const VerificationStep = ({ code, setCode, onVerify, onResend, isLoading, email,
               setCode(value);
             }}
             placeholder="Enter 6-digit code"
-            className="block w-full pl-3 pr-3 py-3 text-center bg-blue-100 border border-blue-400 rounded-2xl text-black placeholder-black/70 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none  text-xl tracking-widest"
+            className="block w-full  pr-3 py-3 text-center bg-blue-200 border border-blue-400 rounded-2xl text-black placeholder-black/70 focus:ring-3 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none  text-xl tracking-widest"
           />
         </div>
 
@@ -112,11 +112,11 @@ const VerificationStep = ({ code, setCode, onVerify, onResend, isLoading, email,
           <button
             onClick={handleResendClick}
             disabled={isResending}
-            className="text-sm text-blue-600 hover:text-blue-700 hover:underline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="text-sm  text-blue-400 hover:text-blue-500 hover:underline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {isResending ? 'Sending...' : 'Resend Code'}
           </button>
-          <span className={`text-sm ${countdown <= 30 ? 'text-red-500 font-medium animate-pulse' : 'text-blue-600'}`}>
+          <span className={`text-sm ${countdown <= 30 ? 'text-red-500 font-medium animate-pulse' : 'text-blue-400'}`}>
             {Math.floor(countdown / 60)}:{(countdown % 60).toString().padStart(2, '0')}
           </span>
         </div>
@@ -125,7 +125,7 @@ const VerificationStep = ({ code, setCode, onVerify, onResend, isLoading, email,
           <button
             type="button"
             onClick={handleBack}
-            className="flex-1 py-3 px-4 border border-gray-400 text-black font-medium rounded-xl hover:bg-blue-200 cursor-pointer transition-colors flex items-center justify-center gap-2"
+            className="flex-1 py-3 px-4 border border-gray-400 text-white font-medium rounded-xl hover:bg-black/20 cursor-pointer transition-colors flex items-center justify-center gap-2"
             disabled={isLoading}
           >
             <ArrowLeft className="h-4 w-4" />
