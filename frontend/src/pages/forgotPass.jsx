@@ -54,9 +54,9 @@ const ForgotPassword = () => {
 
     // Image paths for each step
     const stepImages = [
-        '/src/assets/images/11111.png', // Step 1: Email
-        '/src/assets/images/22222.png', // Step 2: Verify
-        '/src/assets/images/33333.png'  // Step 3: Reset
+        '/src/assets/images/emailEnterStep.png', // Step 1: Email
+        '/src/assets/images/verEnterStep.png', // Step 2: Verify
+        '/src/assets/images/resetPassStep.png'  // Step 3: Reset
     ];
 
     const handleSendCode = async () => {
@@ -148,42 +148,57 @@ const ForgotPassword = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#d9e9fc] flex relative">
+        <div className="min-h-screen  flex relative" 
+             style={{
+                 backgroundImage: 'url("/src/assets/images/forgotPassBG.png")',
+                 backgroundSize: 'cover',
+                 backgroundPosition: 'center',
+                 backgroundRepeat: 'no-repeat',
+                 backgroundAttachment: 'fixed'
+             }}>
+            {/* Blur effect for main background */}
+            <div 
+                className="absolute inset-0 w-full h-full pointer-events-none"
+                style={{
+                    backdropFilter: 'blur(3px)',
+                    WebkitBackdropFilter: 'blur(3px)',
+                }}
+            />
+
+            {/* Background image for current step */}
+            <div
+                className="absolute inset-0 w-full h-full"
+                style={{
+                    backgroundImage: `url("${stepImages[step - 1]}")`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
+                }}
+            />
+
+
             {/* Logo */}
-            <div className="absolute top-0 left-0 z-20  -ml-7 -mt-3">
-                <Link
-                    to="/"
-                    className="flex items-center gap-2"
-                    onClick={() => {
-                        // Clear the saved state when explicitly navigating away
-                        localStorage.removeItem(FORGOT_PW_STEP_KEY);
-                        localStorage.removeItem(FORGOT_PW_EMAIL_KEY);
-                    }}
-                >
-                    <img
-                        src="/src/assets/images/logoBlack.png"
-                        alt="MediFlow Logo"
-                        className="h-29 w-41"
+            <div className="absolute top-8 left-8 z-20">
+                <a href="/" className="flex items-center -mt-8 -ml-15" onClick={() => {
+                    // Clear the saved state when explicitly navigating away
+                    localStorage.removeItem(FORGOT_PW_STEP_KEY);
+                    localStorage.removeItem(FORGOT_PW_EMAIL_KEY);
+                }}>
+                    <img 
+                        src="/src/assets/images/newLogo.png" 
+                        alt="MediFlow Logo" 
+                        className="h-25 w-auto" 
                     />
-                    <span className="heading2 text-3xl text-black -ml-11">MediFlow</span>
-                </Link>
+                    <span className="heading2 text-3xl text-white transform -translate-x-7.5">MediFlow</span>
+                </a>
             </div>
 
-            {/* Left side image */}
-            <div className="hidden md:flex w-full h-screen overflow-hidden -ml-85 ">
-                <img
-                    src={stepImages[step - 1]}
-                    alt="Forgot Password"
-                    className="w-full h-full mt-8  object-cover transform origin-left scale-110 md:scale-130 transition-transform duration-300"
-                />
-            </div>
-
-            {/* Right side content */}
-            <div className="w-full md:w-1/2 flex justify-center items-center  relative mr-20">
+            {/* Right side content - positioned on the right side of the full page */}
+            <div className="w-full md:w-1/2 flex justify-center items-center min-h-screen relative ml-auto lg:mr-2">
                 {/* Close button */}
                 <Link
                     to="/signin"
-                    className="absolute top-6 right-0 text-red-600 hover:text-red-700 transition-colors z-20"
+                    className="absolute top-6 right-10 text-white hover:text-white/80 transition-colors"
                     onClick={() => {
                         // Clear the saved state when explicitly navigating away
                         localStorage.removeItem(FORGOT_PW_STEP_KEY);
@@ -197,22 +212,22 @@ const ForgotPassword = () => {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="w-full max-w-md z-10 text-black"
+                    className="w-full max-w-md z-20"
                 >
                     <AnimatePresence mode="wait">
                         {renderStep()}
                     </AnimatePresence>
 
-                    <p className="mt-9 text-left text-sm">
+                    <p className="mt-9 text-left text-sm text-white">
                         Remember your password?{' '}
                         <Link
                             to="/signin"
-                            className="font-medium text-blue-500 hover:text-blue-600 hover:underline transition-colors inline-flex items-center group"
-                             onClick={() => {
-                        // Clear the saved state when explicitly navigating away
-                        localStorage.removeItem(FORGOT_PW_STEP_KEY);
-                        localStorage.removeItem(FORGOT_PW_EMAIL_KEY);
-                    }}
+                            className="font-medium text-blue-400 hover:text-cyan-300 hover:underline transition-colors inline-flex items-center group"
+                            onClick={() => {
+                                // Clear the saved state when explicitly navigating away
+                                localStorage.removeItem(FORGOT_PW_STEP_KEY);
+                                localStorage.removeItem(FORGOT_PW_EMAIL_KEY);
+                            }}
                         >
                             Sign in
                             <ArrowRight className="mt-1 h-4 w-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-200" />

@@ -36,8 +36,8 @@ const ResetPasswordStep = ({ newPassword, setNewPassword, confirmPassword, setCo
       className="w-full"
     >
       <div className="text-left mb-6">
-        <h2 className="text-5xl font-bold text-black mb-2">Create <br/> New Password</h2>
-        <p className="text-black/70 mb-4">Create a strong and secure password</p>
+        <h2 className="text-5xl font-bold text-white mb-2">Create <br/> New Password</h2>
+        <p className="text-white/80 mb-4">Create a strong and secure password</p>
         
         <div className="grid grid-cols-2 gap-x-4 gap-y-3 mb-2">
           {/* Row 1 */}
@@ -47,7 +47,7 @@ const ResetPasswordStep = ({ newPassword, setNewPassword, confirmPassword, setCo
             ) : (
               <X className="h-4 w-4 text-red-500 mr-2 shrink-0" />
             )}
-            <span className={`text-sm ${requirements.minLength ? 'text-green-600' : 'text-gray-500'}`}>
+            <span className={`text-sm ${requirements.minLength ? 'text-green-600' : 'text-white/60'}`}>
               At least 8 characters long
             </span>
           </div>
@@ -57,7 +57,7 @@ const ResetPasswordStep = ({ newPassword, setNewPassword, confirmPassword, setCo
             ) : (
               <X className="h-4 w-4 text-red-500 mr-2 shrink-0" />
             )}
-            <span className={`text-sm ${requirements.hasNumber ? 'text-green-600' : 'text-gray-500'}`}>
+            <span className={`text-sm ${requirements.hasNumber ? 'text-green-600' : 'text-white/60'}`}>
               At least one number
             </span>
           </div>
@@ -69,7 +69,7 @@ const ResetPasswordStep = ({ newPassword, setNewPassword, confirmPassword, setCo
             ) : (
               <X className="h-4 w-4 text-red-500 mr-2 shrink-0" />
             )}
-            <span className={`text-sm ${requirements.hasUppercase ? 'text-green-600' : 'text-gray-500'}`}>
+            <span className={`text-sm ${requirements.hasUppercase ? 'text-green-600' : 'text-white/60'}`}>
               At least one uppercase letter
             </span>
           </div>
@@ -79,7 +79,7 @@ const ResetPasswordStep = ({ newPassword, setNewPassword, confirmPassword, setCo
             ) : (
               <X className="h-4 w-4 text-red-500 mr-2 shrink-0" />
             )}
-            <span className={`text-sm ${requirements.hasLowercase ? 'text-green-600' : 'text-gray-500'}`}>
+            <span className={`text-sm ${requirements.hasLowercase ? 'text-green-600' : 'text-white/60'}`}>
               At least one lowercase letter
             </span>
           </div>
@@ -91,7 +91,7 @@ const ResetPasswordStep = ({ newPassword, setNewPassword, confirmPassword, setCo
             ) : (
               <X className="h-4 w-4 text-red-500 mr-2 shrink-0" />
             )}
-            <span className={`text-sm ${requirements.hasSpecialChar ? 'text-green-600' : 'text-gray-500'}`}>
+            <span className={`text-sm ${requirements.hasSpecialChar ? 'text-green-600' : 'text-white/60'}`}>
              At least one special character
             </span>
           </div>
@@ -105,7 +105,7 @@ const ResetPasswordStep = ({ newPassword, setNewPassword, confirmPassword, setCo
             )}
             <span className={`text-sm ${
               !confirmPassword 
-                ? 'text-gray-500' 
+                ? 'text-white/60' 
                 : (requirements.passwordsMatch ? 'text-green-600' : 'text-red-500')
             }`}>
               {!confirmPassword 
@@ -119,7 +119,7 @@ const ResetPasswordStep = ({ newPassword, setNewPassword, confirmPassword, setCo
       <div className="space-y-6">
         <div className="relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Lock className="h-5 w-5 text-black" />
+            <Lock className="h-5 w-5 text-white" />
           </div>
           <input
             type={showPassword ? "text" : "password"}
@@ -128,12 +128,12 @@ const ResetPasswordStep = ({ newPassword, setNewPassword, confirmPassword, setCo
             onPaste={(e) => e.preventDefault()}
             onCopy={(e) => e.preventDefault()}
             placeholder="Enter your new password"
-            className="block w-full pl-10 pr-10 py-3 bg-white/5 border border-black/40 rounded-2xl text-black placeholder-black/70 focus:ring-2 focus:ring-black/50 focus:border-transparent transition-all duration-200 outline-none"
+            className="block w-full pl-10 pr-10 py-3 bg-white/5 border border-white/40 rounded-2xl text-white placeholder-black/80 focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-200 outline-none"
           />
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute inset-y-0 right-0 pr-3 flex items-center text-black/90 hover:text-black transition-colors"
+            className="absolute inset-y-0 right-0 pr-3 flex items-center text-white/80 hover:text-white transition-colors"
           >
             {showPassword ? (
               <EyeOff className="h-5 w-5" />
@@ -145,7 +145,7 @@ const ResetPasswordStep = ({ newPassword, setNewPassword, confirmPassword, setCo
 
         <div className="relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Lock className="h-5 w-5 text-black" />
+            <Lock className="h-5 w-5 text-white" />
           </div>
           <input
             type={showConfirmPassword ? "text" : "password"}
@@ -154,12 +154,12 @@ const ResetPasswordStep = ({ newPassword, setNewPassword, confirmPassword, setCo
             onPaste={(e) => e.preventDefault()}
             onCopy={(e) => e.preventDefault()}
             placeholder="Confirm your new password"
-            className="block w-full pl-10 pr-10 py-3 bg-white/5 border border-black/40 rounded-2xl text-black placeholder-black/70 focus:ring-2 focus:ring-black/50 focus:border-transparent transition-all duration-200 outline-none"
+            className="block w-full pl-10 pr-10 py-3 bg-white/5 border border-white/40 rounded-2xl text-white placeholder-black/80 focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-200 outline-none"
           />
           <button
             type="button"
             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            className="absolute inset-y-0 right-0 pr-3 flex items-center text-black/90 hover:text-black transition-colors"
+            className="absolute inset-y-0 right-0 pr-3 flex items-center text-white/80 hover:text-white transition-colors"
           >
             {showConfirmPassword ? (
               <EyeOff className="h-5 w-5" />

@@ -27,7 +27,7 @@ const EmailStep = ({ email, setEmail, onNext, isLoading }) => {
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -20 }}
-      className="w-full"
+      className="w-full z-20"
     >
       {/* Error Message - Top Right Corner */}
       <AnimatePresence>
@@ -53,8 +53,8 @@ const EmailStep = ({ email, setEmail, onNext, isLoading }) => {
       </AnimatePresence>
 
       <div className="text-left mb-8 -mt-25">
-        <h2 className="text-5xl font-bold text-black mb-2">Reset <br/>Your Password</h2>
-        <p className="text-black/70">Enter your email address and we'll send you a verification code</p>
+        <h2 className="text-5xl font-bold text-white mb-2">Reset <br/>Your Password</h2>
+        <p className="text-white/70">Enter your email address and we'll send you a verification code</p>
       </div>
 
       <div className="space-y-10">
@@ -68,8 +68,8 @@ const EmailStep = ({ email, setEmail, onNext, isLoading }) => {
             onChange={handleEmailChange}
             onBlur={() => setIsTouched(true)}
             placeholder="Enter your email"
-            className={`block w-full pl-9 pr-3 py-2 border-b-2 rounded-2xl text-black placeholder-blue-400 duration-200 outline-none ${
-              isTouched && !isValidEmail && email ? 'border-red-500' : 'border-blue-400'
+            className={`block w-full pl-9 pr-3 py-2 border-b-2 rounded-2xl text-white placeholder-blue-400 duration-200 outline-none ${
+              isTouched && !isValidEmail && email ? 'border-red-500' : 'border-blue-500'
             }`}
           />
         </div>
@@ -79,10 +79,10 @@ const EmailStep = ({ email, setEmail, onNext, isLoading }) => {
             whileTap={isValidEmail ? { scale: 0.98 } : {}}
             onClick={onNext}
             disabled={isLoading || !isValidEmail}
-            className={`w-full py-3 px-4 bg-blue-400 font-medium rounded-xl transition-colors ${
+            className={`w-full py-3 px-4 bg-blue-400 font-medium rounded-xl  transition-colors ${
               isValidEmail && !isLoading
                 ? 'hover:bg-blue-300 cursor-pointer'
-                : 'opacity-60 cursor-not-allowe bg-blue-400'
+                : 'opacity-80 cursor-not-allowed bg-blue-400'
             }`}
           >
             {isLoading ? 'Sending...' : 'Send Verification Code'}
