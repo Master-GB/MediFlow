@@ -261,8 +261,10 @@ export const sendOTP = async (req, res) => {
   try {
     const user = await userModel.findById(id);
     if (user.isAccountVerified) {
-      console.log("Account already verified");
-      return;
+      return res.status(400).json({ 
+        success: false, 
+        message: "Account already verified" 
+      });
     }
 
     const otp = String(Math.floor(100000 + Math.random() * 900000));
@@ -359,8 +361,17 @@ export const sendOTP = async (req, res) => {
 `;
     sendEmail(user.email, "Verify Account", htmlMessage);
     console.log("Verification email sent");
+     return res.status(200).json({ 
+      success: true, 
+      message: "OTP sent successfully" 
+    });
   } catch (error) {
     console.log("Error in account verification:", error.message);
+    return res.status(500).json({ 
+      success: false, 
+      message: "Failed to send OTP", 
+      error: error.message 
+    });
   }
 };
 

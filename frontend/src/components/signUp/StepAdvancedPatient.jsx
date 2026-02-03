@@ -549,13 +549,18 @@ const StepAdvancedPatient = ({ data, setData, submit, back }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log('handleSubmit called in StepAdvancedPatient');
+    console.log('Current form data:', data);
     
     if (!validateForm()) {
+      console.log('Form validation failed');
       return;
     }
     
+    console.log('Form validation passed, submitting...');
     setIsSubmitting(true);
     setTimeout(() => {
+      console.log('Calling submit function...');
       submit();
       setIsSubmitting(false);
     }, 1000);

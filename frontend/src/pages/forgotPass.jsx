@@ -150,7 +150,7 @@ const ForgotPassword = () => {
     return (
         <div className="min-h-screen  flex relative" 
              style={{
-                 backgroundImage: 'url("/src/assets/images/forgotPassBG.png")',
+                 backgroundImage: 'url("/src/assets/images/forgotPassBG.jpg")',
                  backgroundSize: 'cover',
                  backgroundPosition: 'center',
                  backgroundRepeat: 'no-repeat',
@@ -160,7 +160,7 @@ const ForgotPassword = () => {
             <div 
                 className="absolute inset-0 w-full h-full pointer-events-none"
                 style={{
-                    backdropFilter: 'blur(3px)',
+                    backdropFilter: 'blur(2px)',
                     WebkitBackdropFilter: 'blur(3px)',
                 }}
             />

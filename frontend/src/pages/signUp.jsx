@@ -7,17 +7,17 @@ import StepBasicPatient from "../components/signUp/StepBasicPatient";
 import StepBasicClinic from "../components/signUp/StepBasicClinic";
 import StepAdvancedPatient from "../components/signUp/StepAdvancedPatient";
 import StepAdvancedClinic from "../components/signUp/StepAdvancedClinic";
+import { useToast } from '../hooks/useToast.js';
+import ToastContainer from '../contexts/ToastContainer.jsx';
 
 const Signup = () => {
   const navigate = useNavigate();
+  const { toasts, addToast, removeToast, success, toastError, warning, info } = useToast();
   const [isLoading, setIsLoading] = useState(true);
   const [step, setStep] = useState(1);
   const [direction, setDirection] = useState(1);
   const [role, setRole] = useState("");
   const [formData, setFormData] = useState({});
-  const [errors, setErrors] = useState({});
-  const [showError, setShowError] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const hasMounted = useRef(false);
 
   // Load saved state on component mount
@@ -121,38 +121,56 @@ const Signup = () => {
             })
 
             if (patientProfile.data.success) {
-              console.log('Patient registration and profile created successfully');
-              sessionStorage.removeItem('signupState');
-              navigate(`/signUp-verification-code?email=${encodeURIComponent(formData.email)}`);
+              try {
+                const verifyData = await axios.post('/api/auth/send-otp')
+
+                if (verifyData.data.success) {
+                  console.log('Patient registration and profile created successfully');
+                  sessionStorage.removeItem('signupState');
+                  console.log('OTP sending successfully');
+                  navigate(`/signUp-verification-code?email=${encodeURIComponent(formData.email)}`);
+                }
+                else {
+                  console.error('OTP sending failed:', verifyData.data.message);
+                  toastError('OTP sending failed:', verifyData.data.message);
+                  await axios.delete('/api/auth/delete-auth-user/' + response.data.user?._id, {
+                    withCredentials: true
+                  })
+                }
+              } catch (Otperror) {
+                console.error('OTP sending failed:', Otperror);
+                toastError(`OTP sending failed: ${Otperror.response?.data?.message || 'Unknown error'}`)
+                await axios.delete('/api/auth/delete-auth-user/' + response.data.user?._id, {
+                  withCredentials: true
+                })
+              }
             } else {
               console.error('Patient profile creation failed:', patientProfile.data.message);
-              alert(`Profile creation failed: ${patientProfile.data.message}`);
-               await axios.delete('/api/auth/delete-auth-user/' + response.data.user?._id, {
+              toastError(`Profile creation failed: ${patientProfile.data.message}`)
+              await axios.delete('/api/auth/delete-auth-user/' + response.data.user?._id, {
                 withCredentials: true
               })
             }
           } catch (profileError) {
             console.error('Patient profile creation failed:', profileError);
-            alert(`Profile creation failed: ${profileError.response?.data?.message || 'Unknown error'}`);
-             await axios.delete('/api/auth/delete-auth-user/' + response.data.user?._id, {
-                withCredentials: true
-              })
+            toastError(`Profile creation failed: ${profileError.response?.data?.message || 'Unknown error'}`)
+            await axios.delete('/api/auth/delete-auth-user/' + response.data.user?._id, {
+              withCredentials: true
+            })
           }
         } else {
           console.error('Patient registration failed:', response.data.message);
-          alert(`Registration failed: ${response.data.message}`);
+          toastError(`Registration failed: ${response.data.message}`);
         }
       } catch (error) {
 
         if (error.response?.data?.isUserExist) {
-          setErrors(prev => ({ ...prev, email: 'Registration failed,Email already exists' }));
-          setShowError(true);
+          toastError("Registration failed,Email already exists")
           return;
         }
 
-        const errorMessage = error.response?.data?.message || 'Unknown error';
-        setErrors(prev => ({ ...prev, email: errorMessage }));
-        setShowError(true);
+        const errorMessage = error.response?.data?.message || 'Unknown error,please try again';
+        toastError(errorMessage)
         return;
       }
 
@@ -238,9 +256,7 @@ const Signup = () => {
 
             if (!formData.verificationDocument || formData.verificationDocument === '' || !(formData.verificationDocument instanceof File)) {
               console.log('Verification document missing or invalid - showing error');
-              setErrors(prev => ({ ...prev, verificationDocument: 'Registration failed,Verification Document not exists' }));
-              setShowError(true);
-
+              toastError('Registration failed,Verification Document not exists');
               await axios.delete('/api/auth/delete-auth-user/' + response.data.user?._id, {
                 withCredentials: true
               })
@@ -276,50 +292,42 @@ const Signup = () => {
               console.log('Clinic registration and profile created successfully');
             } else {
               console.error('Clinic profile creation failed:', clinicProfile.data.message);
-              const backendMessage = clinicProfile.response?.data?.message;
-              const backendError = clinicProfile.response?.data?.error;
-              const errorMessage = backendMessage || backendError || clinicProfile.message || 'Unknown error';
-              alert(`Profile creation failed: ${errorMessage}`);
-               await axios.delete('/api/auth/delete-auth-user/' + response.data.user?._id, {
+              toastError('Clinic profile creation failed:', clinicProfile.data.message);
+              await axios.delete('/api/auth/delete-auth-user/' + response.data.user?._id, {
                 withCredentials: true
               })
             }
           } catch (profileError) {
 
             if (profileError.response?.data?.isRegExist) {
-              setErrors(prev => ({ ...prev, registrationNumber: 'Registration failed,registration Number already exists' }));
-              setShowError(true);
-               await axios.delete('/api/auth/delete-auth-user/' + response.data.user?._id, {
+              toastError('Registration failed,registration Number already exists');
+              await axios.delete('/api/auth/delete-auth-user/' + response.data.user?._id, {
                 withCredentials: true
               })
               return;
             }
-
-            console.error('Clinic profile creation failed:', profileError);
             const backendMessage = profileError.response?.data?.message;
             const backendError = profileError.response?.data?.error;
             const errorMessage = backendMessage || backendError || profileError.message || 'Unknown error';
-            alert(`Profile creation failed: ${errorMessage}`);
-             await axios.delete('/api/auth/delete-auth-user/' + response.data.user?._id, {
-                withCredentials: true
-              })
+            toastError(`Clinic Profile creation failed: ${errorMessage}`);
+            await axios.delete('/api/auth/delete-auth-user/' + response.data.user?._id, {
+              withCredentials: true
+            })
 
           }
         } else {
           console.error('Clinic registration failed:', response.data.message);
-          alert(`Registration failed: ${response.data.message}`);
+          toastError(`Registration failed: ${response.data.message}`);
         }
       } catch (error) {
 
         if (error.response?.data?.isUserExist) {
-          setErrors(prev => ({ ...prev, email: 'Registration failed,Email already exists' }));
-          setShowError(true);
+          toastError('Registration failed,Email already exists' )
           return;
         }
 
         const errorMessage = error.response?.data?.message || 'Unknown error';
-        setErrors(prev => ({ ...prev, email: errorMessage }));
-        setShowError(true);
+        toastError(errorMessage);
         return;
       }
     }
@@ -365,17 +373,6 @@ const Signup = () => {
       }
     })
   };
-
-  // Auto-hide error after 5 seconds
-  useEffect(() => {
-    if (showError) {
-      const timer = setTimeout(() => {
-        setShowError(false);
-      }, 5000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [showError]);
 
   // Show nothing while loading to prevent flash
   if (isLoading) {
@@ -451,38 +448,6 @@ const Signup = () => {
 
   return (
     <>
-      {/* Error Message - Top Right Corner */}
-      {showError && (errors.email || errors.registrationNumber || errors.verificationDocument) && (
-        <div style={{
-          position: 'fixed',
-          top: '20px',
-          right: '20px',
-          backgroundColor: '#ef4444',
-          color: 'white',
-          padding: '12px 20px',
-          borderRadius: '8px',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-          zIndex: 9999,
-          fontSize: '14px',
-          maxWidth: '500px'
-        }}>
-          {errors.email || errors.registrationNumber || errors.verificationDocument}
-          <button
-            onClick={() => setShowError(false)}
-            style={{
-              marginLeft: '10px',
-              background: 'none',
-              border: 'none',
-              color: 'white',
-              cursor: 'pointer',
-              fontSize: '16px'
-            }}
-          >
-            ×
-          </button>
-        </div>
-      )}
-
       <div className="min-h-screen w-screen overflow-x-hidden bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 relative">
         <AnimatePresence custom={direction} initial={false}>
           <motion.div
@@ -498,6 +463,10 @@ const Signup = () => {
           </motion.div>
         </AnimatePresence>
       </div>
+      <ToastContainer
+        toasts={toasts}
+        removeToast={removeToast}
+      />
     </>
   );
 
