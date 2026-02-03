@@ -128,7 +128,7 @@ const ResetPasswordStep = ({ newPassword, setNewPassword, confirmPassword, setCo
             onPaste={(e) => e.preventDefault()}
             onCopy={(e) => e.preventDefault()}
             placeholder="Enter your new password"
-            className="block w-full pl-10 pr-10 py-3 bg-white/5 border border-white/40 rounded-2xl text-white placeholder-black/80 focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-200 outline-none"
+            className="block w-full pl-10 pr-10 py-3 bg-white/5 border border-white/40 rounded-2xl text-white placeholder-white/60 focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-200 outline-none"
           />
           <button
             type="button"
@@ -154,7 +154,7 @@ const ResetPasswordStep = ({ newPassword, setNewPassword, confirmPassword, setCo
             onPaste={(e) => e.preventDefault()}
             onCopy={(e) => e.preventDefault()}
             placeholder="Confirm your new password"
-            className="block w-full pl-10 pr-10 py-3 bg-white/5 border border-white/40 rounded-2xl text-white placeholder-black/80 focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-200 outline-none"
+            className="block w-full pl-10 pr-10 py-3 bg-white/5 border border-white/40 rounded-2xl text-white placeholder-white/60 focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-200 outline-none"
           />
           <button
             type="button"
@@ -176,7 +176,7 @@ const ResetPasswordStep = ({ newPassword, setNewPassword, confirmPassword, setCo
           className={`w-full py-3 px-4 bg-blue-400 text-black font-medium rounded-xl transition-colors ${
             allRequirementsMet 
               ? 'hover:bg-blue-300 cursor-pointer' 
-              : 'opacity-50 cursor-not-allowed'
+              : 'opacity-70 cursor-not-allowed'
           }`}
         >
           {isLoading ? 'Updating...' : 'Reset Password'}

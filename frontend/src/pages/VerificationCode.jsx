@@ -3,8 +3,12 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Mail, RotateCw, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import LandingNav from '../components/landingPage/landingNav';
+import { useToast } from '../hooks/useToast.js';
+import ToastContainer from '../contexts/ToastContainer.jsx';
+import axios from 'axios';
 
 const VerificationCode = () => {
+    const { toasts, removeToast, success, toastError, info } = useToast();
     const [code, setCode] = useState(['', '', '', '', '', '']);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [countdown, setCountdown] = useState(180);
@@ -58,33 +62,111 @@ const VerificationCode = () => {
     };
 
     // Handle form submission
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
-        // Simulate API call
-        setTimeout(() => {
+
+        try {
+            const otp = code.join('');
+            // Check if OTP is complete
+            if (otp.length !== 6) {
+                toastError('Please enter all 6 digits');
+                setIsSubmitting(false);
+                return;
+            }
+
+            const response = await axios.post('/api/auth/verify-account', { otp }, {
+                withCredentials: true
+            });
+            console.log('Response received:', response.data); // Debug log
+
+            if (response.data.success) {
+                // Clear countdown from sessionStorage on successful verification
+                sessionStorage.removeItem('otpCountdown');
+                sessionStorage.removeItem('otpTimestamp');
+                
+                success('Account has created successfully')
+                console.log('successfull account created:', response.data.message);
+                navigate('/signin');
+            } else {
+                toastError('OTP Verification Failed:', response.data.message)
+            }
+        } catch (error) {
+            toastError(`OTP Verification Failed: ${error.response?.data?.message || 'Unknown error'}`)
+        }
+        finally {
             setIsSubmitting(false);
-            // Navigate to success or next page
-            // navigate('/success');
-        }, 1500);
+        }
+
     };
 
     // Handle resend code
-    const handleResend = () => {
+    const handleResend = async () => {
         if (countdown > 0) return;
-        setCountdown(180);
-        setIsResent(true);
-        // Here you would typically call your API to resend the code
-        setTimeout(() => setIsResent(false), 3000);
+
+        try {
+            const responce = await axios.post('/api/auth/send-otp', {
+                withCredentials: true
+            })
+
+            if (responce.data.success) {
+                const newCountdown = 180;
+                setCountdown(newCountdown);
+                setIsResent(true);
+                info('New OTP sent to your email!');
+                console.log('OTP sending successfully');
+
+                // Save new countdown to sessionStorage
+                sessionStorage.setItem('otpCountdown', newCountdown.toString());
+                sessionStorage.setItem('otpTimestamp', Date.now().toString());
+
+                // Clear current OTP inputs
+                setCode(['', '', '', '', '', '']);
+                inputRefs.current[0]?.focus();
+                setTimeout(() => setIsResent(false), 3000);
+            }
+            else {
+                toastError('Failed to resend OTP');
+            }
+
+        } catch (error) {
+            toastError(`Failed to resend OTP: ${error.response?.data?.message || 'Unknown error'}`);
+        }
     };
 
-    // Countdown effect
+    // Countdown effect with persistence
     useEffect(() => {
-        if (countdown > 0) {
-            const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
-            return () => clearTimeout(timer);
+        // Get saved countdown from sessionStorage
+        const savedCountdown = sessionStorage.getItem('otpCountdown');
+        const savedTimestamp = sessionStorage.getItem('otpTimestamp');
+        
+        if (savedCountdown && savedTimestamp) {
+            // Calculate remaining time based on when page was last loaded
+            const elapsed = Math.floor((Date.now() - parseInt(savedTimestamp)) / 1000);
+            const remaining = Math.max(0, parseInt(savedCountdown) - elapsed);
+            setCountdown(remaining);
         }
-    }, [countdown]);
+
+        const timer = setInterval(() => {
+            setCountdown((prev) => {
+                const newCountdown = Math.max(0, prev - 1);
+                
+                // Save to sessionStorage
+                sessionStorage.setItem('otpCountdown', newCountdown.toString());
+                sessionStorage.setItem('otpTimestamp', Date.now().toString());
+                
+                // Clear sessionStorage when countdown reaches 0
+                if (newCountdown === 0) {
+                    sessionStorage.removeItem('otpCountdown');
+                    sessionStorage.removeItem('otpTimestamp');
+                }
+                
+                return newCountdown;
+            });
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, []);
 
     // Focus first input on mount
     useEffect(() => {
@@ -93,7 +175,8 @@ const VerificationCode = () => {
 
     return (
 
-        <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+        <>
+            <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
             <LandingNav />
             {/* Background Image with Overlay */}
             <div className="absolute inset-0 z-0">
@@ -180,8 +263,8 @@ const VerificationCode = () => {
                             whileTap={{ scale: 0.98 }}
                             disabled={isSubmitting || code.some(digit => !digit)}
                             className={`w-full py-3 px-4 rounded-lg font-medium mb-4  text-white ${isSubmitting || code.some(digit => !digit)
-                                    ? 'bg-blue-400 cursor-not-allowed'
-                                    : 'bg-blue-600 hover:bg-blue-700 cursor-pointer'
+                                ? 'bg-blue-400 cursor-not-allowed'
+                                : 'bg-blue-600 hover:bg-blue-700 cursor-pointer'
                                 } transition-colors`}
                         >
                             {isSubmitting ? 'Verifying...' : 'Verify Account'}
@@ -192,7 +275,6 @@ const VerificationCode = () => {
                         <button
                             type="button"
                             onClick={handleResend}
-                            disabled={isResent || countdown > 0}
                             className="text-blue-600 hover:underline focus:outline-none disabled:opacity-80 cursor-pointer"
                         >
                             request a new one
@@ -202,6 +284,11 @@ const VerificationCode = () => {
             </motion.div>
 
         </div>
+         <ToastContainer
+                toasts={toasts}
+                removeToast={removeToast}
+            />
+    </>
     );
 };
 

@@ -139,7 +139,7 @@ const VerificationStep = ({ code, setCode, onVerify, onResend, isLoading, email,
             className={`flex-1 py-3 px-4 bg-blue-400 text-black font-medium rounded-xl transition-colors ${
               code.length === 6 && !isLoading
                 ? 'hover:bg-blue-300 cursor-pointer' 
-                : 'opacity-60 cursor-not-allowed hover:bg-blue-400'
+                : 'opacity-70 cursor-not-allowed hover:bg-blue-400'
             }`}
           >
             {isLoading ? 'Verifying...' : 'Verify'}
