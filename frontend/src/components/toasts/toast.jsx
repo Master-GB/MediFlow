@@ -5,7 +5,7 @@ import { X, AlertCircle, CheckCircle, Info, AlertTriangle } from 'lucide-react';
 const Toast = ({ 
   message, 
   type = 'info', 
-  duration = 2000, 
+  duration = 15000, 
   onClose, 
   position = 'top-right' 
 }) => {
@@ -19,26 +19,26 @@ const Toast = ({
   const getIcon = () => {
     switch (type) {
       case 'success':
-        return <CheckCircle className="w-5 h-5 text-green-500" />;
+        return <CheckCircle className="w-5 h-5 text-white" />;
       case 'error':
         return <AlertCircle className="w-5 h-5 text-white" />;
       case 'warning':
         return <AlertTriangle className="w-5 h-5 text-yellow-500" />;
       default:
-        return <Info className="w-5 h-5 text-blue-500" />;
+        return <Info className="w-5 h-5 text-white" />;
     }
   };
 
   const getStyles = () => {
     switch (type) {
       case 'success':
-        return 'bg-green-50 border-green-200 text-green-800';
+        return 'bg-[#00a300] text-white';
       case 'error':
         return 'bg-[#ef4444]  text-white';
       case 'warning':
         return 'bg-yellow-50 border-yellow-200 text-yellow-800';
       default:
-        return 'bg-blue-300 border-blue-200 text-blue-800';
+        return 'bg-[#50a2ff]  text-white';
     }
   };
 

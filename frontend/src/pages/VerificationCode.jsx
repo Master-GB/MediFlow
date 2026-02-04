@@ -87,12 +87,12 @@ const VerificationCode = () => {
                 
                 success('Account has created successfully')
                 console.log('successfull account created:', response.data.message);
-                navigate('/signin');
+                navigate('/signin', { state: {signUpState: true } });
             } else {
-                toastError('OTP Verification Failed:', response.data.message)
+                toastError('OTP Verification Failed:', response?.data?.message || 'OTP Verification Failed')
             }
         } catch (error) {
-            toastError(`OTP Verification Failed: ${error.response?.data?.message || 'Unknown error'}`)
+            toastError(`OTP Verification Failed: ${error.response?.data?.message || 'OTP Verification Failed'}`)
         }
         finally {
             setIsSubmitting(false);
