@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { Lock, Mail, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { Link, useLocation,useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { toast } from 'react-toastify';
 import { useToast } from '../hooks/useToast.js';
 import ToastContainer from '../contexts/ToastContainer.jsx';
 import FloatingShape from '../components/floatingShape.jsx';
@@ -17,10 +16,8 @@ const SignIn = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [emailError, setEmailError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
   const canvasRef = useRef(null);
-  const { toasts, removeToast, toastError,success, info } = useToast();
+  const { toasts, removeToast, toastError,success  } = useToast();
 
   // Check for password reset success on component mount
   useEffect(() => {
@@ -158,22 +155,19 @@ const SignIn = () => {
   const validateForm = () => {
     let isValid = true;
     
-    // Reset previous errors
-    setEmailError('');
-    setPasswordError('');
+   
     
-    // Validate email
-    if (!formData.email) {
-      setEmailError('Email is required');
+    if(!formData.email && !formData.password){
+      toastError('Email & Password is required:Please Enter your Crediantials');
+      isValid = false;
+    }else if (!formData.email) {
+      toastError('Email is required:Please Enter your Email');
       isValid = false;
     } else if (!validateEmail(formData.email)) {
-      setEmailError('Please enter a valid email address');
+      toastError('Please enter a valid email address');
       isValid = false;
-    }
-    
-    // Validate password
-    if (!formData.password) {
-      setPasswordError('Password is required');
+    }else if (!formData.password) {
+      toastError('Password is required:Please Enter your Password')
       isValid = false;
     }
     
@@ -198,7 +192,7 @@ const SignIn = () => {
     setIsLoading(true);
     
     try {
-      const response = await axios.post('/api/auth//login', {
+      const response = await axios.post('/api/auth/login', {
         email:formData.email,
         password:formData.password
       })
@@ -211,12 +205,7 @@ const SignIn = () => {
 
     } catch (error) {
       const errorMessage = error.response?.data?.message || 'An error occurred during sign in';
-      toast.error(errorMessage);
-      
-      // Handle specific error cases if needed
-      if (error.response?.status === 401) {
-        setPasswordError('Invalid email or password');
-      }
+      toastError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -238,34 +227,6 @@ const SignIn = () => {
             <span className="heading2 text-3xl text-white transform -translate-x-7.5">MediFlow</span>
           </a>
         </div>
-
-        {/* Error Messages */}
-        {(emailError || passwordError) && (
-          <div className="fixed top-4 right-4 z-50 space-y-2">
-            {emailError && (
-              <div className="bg-red-500/90 text-white px-6 py-3 rounded-lg shadow-lg flex items-center justify-between min-w-64">
-                <span>{emailError}</span>
-                <button
-                  onClick={() => setEmailError('')}
-                  className="ml-4 text-white hover:text-gray-200"
-                >
-                  ×
-                </button>
-              </div>
-            )}
-            {passwordError && (
-              <div className="bg-red-500/90 text-white px-6 py-3 rounded-lg shadow-lg flex items-center justify-between min-w-64">
-                <span>{passwordError}</span>
-                <button
-                  onClick={() => setPasswordError('')}
-                  className="ml-4 text-white hover:text-gray-200"
-                >
-                  ×
-                </button>
-              </div>
-            )}
-          </div>
-        )}
         
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -291,18 +252,9 @@ const SignIn = () => {
                     value={formData.email}
                     onChange={(e) => {
                       handleChange(e);
-                      // Clear error when user starts typing
-                      if (emailError) setEmailError('');
-                    }}
-                    onBlur={() => {
-                      if (formData.email && !validateEmail(formData.email)) {
-                        setEmailError('Please enter a valid email address');
-                      } else {
-                        setEmailError('');
-                      }
                     }}
                     placeholder="Email Address"
-                    className={`w-full pl-16 pr-6 py-4 mb-2 bg-white/5 border ${emailError ? 'border-red-500' : 'border-white/10'} rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:bg-white/5 transition-all text-base`}
+                    className={`w-full pl-16 pr-6 py-4 mb-2 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:bg-white/5 transition-all text-base`}
                     onInvalid={(e) => e.preventDefault()}
                   />
                 </div>
@@ -317,18 +269,9 @@ const SignIn = () => {
                     value={formData.password}
                     onChange={(e) => {
                       handleChange(e);
-                      // Clear error when user starts typing
-                      if (passwordError) setPasswordError('');
-                    }}
-                    onBlur={() => {
-                      if (!formData.password) {
-                        setPasswordError('Password is required');
-                      } else {
-                        setPasswordError('');
-                      }
                     }}
                     placeholder="Password"
-                    className={`w-full pl-16 pr-12 py-4 bg-white/5 border ${passwordError ? 'border-red-500' : 'border-white/10'} rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:bg-white/5 transition-all text-base`}
+                    className={`w-full pl-16 pr-12 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:bg-white/5 transition-all text-base`}
                     onInvalid={(e) => e.preventDefault()}
                   />
                   <button
