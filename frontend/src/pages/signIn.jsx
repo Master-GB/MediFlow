@@ -1,12 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Lock, Mail, Eye, EyeOff, ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation,useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useToast } from '../hooks/useToast.js';
+import ToastContainer from '../contexts/ToastContainer.jsx';
 import FloatingShape from '../components/floatingShape.jsx';
 
 const SignIn = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -16,6 +20,22 @@ const SignIn = () => {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const canvasRef = useRef(null);
+  const { toasts, removeToast, toastError,success, info } = useToast();
+
+  // Check for password reset success on component mount
+  useEffect(() => {
+    if (location.state?.passwordReset) {
+      success('Password reset successfully! You can now sign in with your new password.');
+      // Clear the state so the toast doesn't show again on refresh
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    if(location.state?.signUpState){
+      success('Account creation successfully! You can now sign in with your credintials.');
+      // Clear the state so the toast doesn't show again on refresh
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, [location.state]);
 
   // Wave animation effect
   useEffect(() => {
@@ -178,12 +198,17 @@ const SignIn = () => {
     setIsLoading(true);
     
     try {
-      // Replace with your actual API endpoint
-      // const response = await axios.post('/api/auth/signin', formData);
-      // Handle successful sign in
-      toast.success('Successfully signed in!');
-      // Redirect to dashboard or home
-      // navigate('/dashboard');
+      const response = await axios.post('/api/auth//login', {
+        email:formData.email,
+        password:formData.password
+      })
+
+      if(response.data.success){
+        navigate('/patient-dashboard')
+      }else{
+        toastError(response?.data?.message || 'An error occurred during sign in')
+      }
+
     } catch (error) {
       const errorMessage = error.response?.data?.message || 'An error occurred during sign in';
       toast.error(errorMessage);
@@ -198,6 +223,7 @@ const SignIn = () => {
   };
 
   return (
+    <>
     <div className="w-full flex flex-col md:flex-row m-0 p-0 h-screen">
       {/* Left Side - Sign In Card */}
       <div className="w-full md:w-2/5 p-4 md:p-6 lg:p-8 bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 overflow-y-auto m-0 flex justify-center items-center">
@@ -504,6 +530,11 @@ const SignIn = () => {
         </div>
       </div>
     </div>
+     <ToastContainer
+                toasts={toasts}
+                removeToast={removeToast}
+            />
+    </>
   );
 };
 

@@ -521,7 +521,7 @@ export const sendResetOtp = async (req, res) => {
     if (!user) {
       return res
         .status(400)
-        .json({ success: false, message: "User not found" });
+        .json({ success: false, message: "OTP sending failed,User not found" });
     }
 
     const passOtp = String(Math.floor(100000 + Math.random() * 900000));
@@ -622,26 +622,26 @@ export const sendResetOtp = async (req, res) => {
 };
 
 export const verifyResetOtp = async (req, res) => {
-  const { email, passotp } = req.body;
+  const { email, code } = req.body;
   try {
-    if (!email || !passotp) {
+    if (!email || !code) {
       return res
         .status(400)
-        .json({ success: false, message: "Missing Details" });
+        .json({ success: false, message: "Email verification failed,Missing Details" });
     }
     const user = await userModel.findOne({ email });
     if (!user) {
       return res
         .status(400)
-        .json({ success: false, message: "User not found" });
+        .json({ success: false, message: "Email verification failed,User not found" });
     }
 
-    if (user.resetOtp !== passotp || user.resetOtp === "") {
-      return res.status(400).json({ success: false, message: "Invalid OTP" });
+    if (user.resetOtp !== code || user.resetOtp === "") {
+      return res.status(400).json({ success: false, message: "Email verification failed,Invalid OTP" });
     }
 
     if (user.resetOtpExpiry < Date.now()) {
-      return res.status(400).json({ success: false, message: "OTP Expired" });
+      return res.status(400).json({ success: false, message: "Email verification failed,OTP Expired" });
     }
 
     return res
@@ -664,14 +664,14 @@ export const resetPassword = async (req, res) => {
     if (!email || !newPassword) {
       return res
         .status(400)
-        .json({ success: false, message: "Missing Details" });
+        .json({ success: false, message: "Password Reset failed,Missing Details" });
     }
 
     const user = await userModel.findOne({ email });
     if (!user) {
       return res
         .status(400)
-        .json({ success: false, message: "User not found" });
+        .json({ success: false, message: "Password Reset failed,User not found" });
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
