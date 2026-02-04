@@ -5,7 +5,7 @@ import { X, AlertCircle, CheckCircle, Info, AlertTriangle } from 'lucide-react';
 const Toast = ({ 
   message, 
   type = 'info', 
-  duration = 15000, 
+  duration = 7000, 
   onClose, 
   position = 'top-right' 
 }) => {

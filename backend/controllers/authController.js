@@ -65,26 +65,26 @@ export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({ success: false, message: "Missing Details" });
+    return res.status(400).json({ success: false, message: "Sign In failed:Missing Details" });
   }
 
   try {
     const user = await userModel.findOne({ email });
     if (!user) {
-      return res.status(400).json({ success: false, message: "Invalid email" });
+      return res.status(400).json({ success: false, message: "Invalid Credintials:please Enter Valid Credintials " });
     }
 
     if (!user.isAccountVerified) {
       return res
         .status(400)
-        .json({ success: false, message: "Account not verified" });
+        .json({ success: false, message: "Sign In failed:Account not verified" });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return res
         .status(400)
-        .json({ success: false, message: "Invalid password" });
+        .json({ success: false, message: "Invalid Credintials:please Enter Valid Credintials" });
     }
 
     generateToken(res, user._id, user.name, user.role);
@@ -101,7 +101,7 @@ export const loginUser = async (req, res) => {
   } catch (error) {
     return res
       .status(500)
-      .json({ success: false, message: "Login failed", error: error.message });
+      .json({ success: false, message: "Login failed:please try again", error: error.message });
   }
 };
 
