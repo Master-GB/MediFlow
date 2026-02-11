@@ -141,22 +141,22 @@ const LandingNav = ({ className = '' }) => {
                 </div>
               </div>
               
-              <a href="#pricing" className={`px-3 py-2 rounded-md font-medium cursor-pointer transition-colors ${
+              <a href="/pricing-page" className={`px-3 py-2 rounded-md font-medium cursor-pointer transition-colors ${
                 scrolled 
                   ? 'text-white/90 hover:bg-white/10' 
                   : 'text-white hover:bg-blue-800/30'
               }`}>Pricing</a>
 
-              <a href="#about" className={`px-3 py-2 rounded-md font-medium cursor-pointer transition-colors ${
+              <a href="/about-us" className={`px-3 py-2 rounded-md font-medium cursor-pointer transition-colors ${
                 scrolled 
                   ? 'text-white/90 hover:bg-white/10' 
                   : 'text-white hover:bg-blue-800/30'
-              }`}>About</a>
-              <a href="#contact" className={`px-3 py-2 rounded-md font-medium cursor-pointer transition-colors ${
+              }`}>About Us</a>
+              <a href="/contact-us" className={`px-3 py-2 rounded-md font-medium cursor-pointer transition-colors ${
                 scrolled 
                   ? 'text-white/90 hover:bg-white/10' 
                   : 'text-white hover:bg-blue-800/30'
-              }`}>Contact</a>
+              }`}>Contact Us</a>
             </div>
 
             {/* CTA (desktop) */}
@@ -176,7 +176,7 @@ const LandingNav = ({ className = '' }) => {
                 className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-lg font-bold shadow-md transition-all ${
                   scrolled 
                     ? 'bg-white text-black hover:bg-gray-200' 
-                    : 'bg-blue-600 text-black hover:bg-blue-700'
+                    : 'bg-blue-600 text-black hover:bg-blue-500'
                 }`}
               >
                 Sign In
@@ -224,8 +224,8 @@ const LandingNav = ({ className = '' }) => {
               </div>
             </div>
 
-            <a href="#about" className="block px-3 py-2 rounded-md text-base font-medium text-slate-800 hover:bg-slate-50">About</a>
-            <a href="#contact" className="block px-3 py-2 rounded-md text-base font-medium text-slate-800 hover:bg-slate-50">Contact</a>
+            <a href="/about-us" className="block px-3 py-2 rounded-md text-base font-medium text-slate-800 hover:bg-slate-50">About</a>
+            <a href="/contact" className="block px-3 py-2 rounded-md text-base font-medium text-slate-800 hover:bg-slate-50">Contact</a>
 
             <div className="px-3 pt-2 space-y-2">
               <a href="/login" className="block text-center px-4 py-2 rounded-md font-semibold text-slate-800 hover:bg-slate-50">Log in</a>

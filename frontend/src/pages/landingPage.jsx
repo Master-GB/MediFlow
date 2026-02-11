@@ -122,7 +122,7 @@ const LandingPage = () => {
         />
       </div>
 
-      <LandingNav className="fixed top-0 left-0 right-0 z-50 text-white" />
+      <LandingNav className="fixed top-0 left-0 right-0 z-50" />
 
       {/* Hero Section */}
       <main className="mt-0 relative">
