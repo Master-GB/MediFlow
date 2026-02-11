@@ -7,6 +7,9 @@ import ClinicSignUpSuccess from './pages/ClinicSignUpSuccess.jsx';
 import VerificationCode from './pages/VerificationCode.jsx';
 import SignIn from './pages/signIn.jsx';
 import ForgotPassword from './pages/forgotPass.jsx';
+import AboutUs from './pages/AboutUs.jsx';
+import ContactUs from './pages/ContactUs.jsx';
+import PricingPage from './pages/Pricing.jsx';
 import PatientDashboard from './pages/PatientDashboard.jsx';
 
 
@@ -21,6 +24,9 @@ const LandingPageLayout = () => {
         <Route path="/signUp-verification-code" element={<VerificationCode/>}/>
         <Route path="/signIn" element={<SignIn/>}/>
         <Route path="/forgot-password" element={<ForgotPassword/>}/>
+        <Route path="/about-us" element={<AboutUs/>}/>
+        <Route path="/contact-us" element={<ContactUs/>}/>
+        <Route path="/pricing-page" element={<PricingPage/>}/>
         <Route path ="/patient-dashboard" element={<PatientDashboard/>}/>
       </Routes>
     </div>

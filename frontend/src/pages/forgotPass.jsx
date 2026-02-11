@@ -188,20 +188,13 @@ const ForgotPassword = () => {
         <>
             <div className="min-h-screen  flex relative"
                 style={{
-                    backgroundImage: 'url("/src/assets/images/forgotPassBG.jpg")',
+                    backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),url("/src/assets/images/forgotPassBG.jpg")',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                     backgroundRepeat: 'no-repeat',
                     backgroundAttachment: 'fixed'
                 }}>
-                {/* Blur effect for main background */}
-                <div
-                    className="absolute inset-0 w-full h-full pointer-events-none"
-                    style={{
-                        backdropFilter: 'blur(2px)',
-                        WebkitBackdropFilter: 'blur(3px)',
-                    }}
-                />
+               
 
                 {/* Background image for current step */}
                 <div
