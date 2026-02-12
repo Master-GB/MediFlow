@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import BaseUser from './baseUserModel.js';
 
 const doctorSchema = new mongoose.Schema({
     // Basic Information
@@ -321,6 +320,6 @@ doctorSchema.virtual('currentAffiliations').get(function() {
 });
 
 
-const User = mongoose.models.doctor || mongoose.model('doctorProfile',doctorSchema);
+const Doctor = mongoose.models.doctor || mongoose.model('doctorProfile',doctorSchema);
 
 export default Doctor;
