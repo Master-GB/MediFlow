@@ -174,7 +174,7 @@ const AboutUs = () => {
             transition={{ duration: 0.8 }}
             className="text-center"
           >
-            <h1 className="text-5xl md:text-6xl font-bold mb-6">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 mt-5">
               About MediFlow
             </h1>
             <p className="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto mb-8">
@@ -200,7 +200,7 @@ const AboutUs = () => {
       </section>
 
       {/* Stats Section */}
-      <section ref={statsRef} className="py-20 bg-white">
+      <section ref={statsRef} className="py-15 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
@@ -230,7 +230,7 @@ const AboutUs = () => {
       </section>
 
       {/* Mission/Vision Tabs */}
-      <section className="py-10 bg-linear-to-r from-blue-100 to-emerald-100">
+      <section className="py-15 bg-linear-to-r from-blue-100 to-emerald-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -279,7 +279,7 @@ const AboutUs = () => {
                 <div className="grid md:grid-cols-3 gap-6">
                   {['Seamless Connections', 'Digital Innovation', 'Healthcare Access'].map((item) => (
                     <div key={item} className="flex items-center space-x-3">
-                      <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0" />
+                      <CheckCircle className="w-6 h-6 text-green-500 shrink-0" />
                       <span className="text-gray-700 font-medium">{item}</span>
                     </div>
                   ))}
@@ -299,7 +299,7 @@ const AboutUs = () => {
                 <div className="grid md:grid-cols-3 gap-6">
                   {['Platform Leadership', 'Healthcare Technology', 'Universal Access'].map((item) => (
                     <div key={item} className="flex items-center space-x-3">
-                      <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0" />
+                      <CheckCircle className="w-6 h-6 text-green-500 shrink-0" />
                       <span className="text-gray-700 font-medium">{item}</span>
                     </div>
                   ))}
@@ -319,7 +319,7 @@ const AboutUs = () => {
                       transition={{ duration: 0.5, delay: index * 0.1 }}
                       className="flex space-x-4"
                     >
-                      <div className="flex-shrink-0">
+                      <div className="shrink-0">
                         <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
                           <value.icon className="w-6 h-6 text-blue-600" />
                         </div>
@@ -338,7 +338,7 @@ const AboutUs = () => {
       </section>
 
       {/* Team Section */}
-      <section className="py-10 bg-white">
+      <section className="py-15 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -361,8 +361,8 @@ const AboutUs = () => {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="group"
               >
-                <div className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-                  <div className="aspect-square bg-gradient-to-br from-blue-100 to-indigo-100 relative overflow-hidden">
+                <div className="bg-linear-to-br from-gray-50 to-blue-50 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+                  <div className="aspect-square bg-linear-to-br from-blue-100 to-indigo-100 relative overflow-hidden">
                     <img 
                       src={member.image} 
                       alt={member.name}
@@ -391,7 +391,7 @@ const AboutUs = () => {
       </section>
 
       {/* Timeline Section */}
-      <section className="py-10 bg-linear-to-r from-blue-100 to-emerald-100">
+      <section className="py-15 bg-linear-to-r from-blue-100 to-emerald-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -432,7 +432,7 @@ const AboutUs = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-10 bg-white text-black">
+      <section className="py-15 bg-white text-black">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}

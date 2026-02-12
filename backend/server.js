@@ -7,6 +7,7 @@ import connectDB from './config/db.js';
 import authRoutes from './routes/authRoute.js';
 import userRouter from './routes/userRoute.js';
 import userProfileRouter from './routes/userProfileRoute.js';
+import messageRouter from './routes/messgeRoute.js';
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ const allowedOrigins = ['http://localhost:5173', 'http://localhost:5173/']
 app.use(cookieParser());
 app.use(cors({ origin: allowedOrigins ,credentials:true}));
 app.use(express.json());
+//app.use(express.urlencoded({ extended: true }));
 
 connectDB();
 const PORT = process.env.PORT || 3000;
@@ -26,6 +28,7 @@ app.get('/',(req,res)=>{ res.send("API is running...");});
 app.use('/api/auth',authRoutes);
 app.use('/api/user',userRouter);
 app.use('/api/profile',userProfileRouter);
+app.use('/api/message',messageRouter);
 
 app.use((err, req, res, next) => {
     if (!err) return next();

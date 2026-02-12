@@ -29,7 +29,11 @@ import {
   Headphones
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import axios from 'axios'
 import LandingNav from '../components/landingPage/landingNav';
+import LandingFooter from '../components/landingPage/landingFooter.jsx';
+import { useToast } from '../hooks/useToast.js';
+import ToastContainer from '../contexts/ToastContainer.jsx';
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
@@ -43,14 +47,16 @@ const ContactUs = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [activeContactMethod, setActiveContactMethod] = useState('form');
+   const { toasts, addToast, removeToast, success, toastError, warning, info } = useToast();
 
   const departments = [
-    { value: 'general', label: 'General Inquiry', icon: MessageCircle, color: 'blue' },
-    { value: 'emergency', label: 'Emergency', icon: Shield, color: 'red' },
-    { value: 'appointment', label: 'Book Appointment', icon: Calendar, color: 'green' },
-    { value: 'billing', label: 'Billing & Insurance', icon: Globe, color: 'purple' },
-    { value: 'feedback', label: 'Feedback & Complaints', icon: Star, color: 'yellow' },
-    { value: 'careers', label: 'Careers', icon: Users, color: 'indigo' }
+    { value: 'general', label: 'Platform Support', icon: MessageCircle, color: 'blue' },
+    { value: 'emergency', label: 'Emergency Support', icon: Shield, color: 'red' },
+    { value: 'appointment', label: 'Appointment Booking', icon: Calendar, color: 'green' },
+    { value: 'billing', label: 'Platform Billing', icon: Globe, color: 'purple' },
+    { value: 'feedback', label: 'Platform Feedback', icon: Star, color: 'yellow' },
+    { value: 'careers', label: 'Join Our Platform', icon: Users, color: 'indigo' },
+    { value: 'clinic', label: 'Clinic Partnership', icon: Heart, color: 'pink' }
   ];
 
   const contactMethods = [
@@ -58,27 +64,34 @@ const ContactUs = () => {
       id: 'form',
       title: 'Send Message',
       description: 'Fill out our contact form',
-      icon: Send,
+      icon:   Send,
       color: 'from-blue-500 to-blue-600'
     },
     {
       id: 'phone',
-      title: 'Call Us',
-      description: 'Speak with our team',
+      title: 'Call Platform Support',
+      description: 'Speak with our platform team',
       icon: Phone,
       color: 'from-green-500 to-green-600'
     },
     {
+      id: 'email',
+      title: 'Email Us',
+      description: 'Send us an email',
+      icon: Mail,
+      color: 'from-red-500 to-red-600'
+    },
+    {
       id: 'visit',
-      title: 'Visit Us',
-      description: 'Stop by our location',
+      title: 'Visit Our Offices',
+      description: 'Stop by our platform support centers',
       icon: MapPin,
       color: 'from-purple-500 to-purple-600'
     },
     {
       id: 'chat',
       title: 'Live Chat',
-      description: 'Chat with support',
+      description: 'Chat with our platform support team',
       icon: MessageCircle,
       color: 'from-orange-500 to-orange-600'
     }
@@ -86,27 +99,27 @@ const ContactUs = () => {
 
   const locations = [
     {
-      name: 'Main Hospital',
-      address: '123 Healthcare Avenue, Medical City, MC 12345',
-      phone: '+1 (555) 123-4567',
-      hours: '24/7 Emergency, 8AM-8PM General',
-      services: ['Emergency Care', 'General Medicine', 'Surgery', 'Diagnostics'],
+      name: 'Platform Headquarters',
+      address: 'kurunegala',
+      phone: '+94 37 3445 678',
+      hours: '24/7 Platform Support, 9AM-6PM Office',
+      services: ['Platform Support', 'Clinic Partnerships', 'Technical Help', 'Patient Services'],
       image: '/api/placeholder/400/300'
     },
     {
-      name: 'Downtown Clinic',
-      address: '456 Wellness Street, Downtown, DC 67890',
-      phone: '+1 (555) 987-6543',
-      hours: '8AM-6PM Weekdays, 9AM-2PM Weekends',
-      services: ['Primary Care', 'Pediatrics', 'Mental Health', 'Preventive Care'],
+      name: 'Regional Support Center',
+      address: 'kurunegala',
+      phone: '+94 37 777 4567',
+      hours: '8AM-8PM Platform Support, 24/7',
+      services: ['Patient Onboarding', 'Clinic Integration', 'Platform Training', 'Account Support'],
       image: '/api/placeholder/400/300'
     },
     {
-      name: 'Specialist Center',
-      address: '789 Expert Boulevard, Specialist District, SD 11223',
-      phone: '+1 (555) 456-7890',
+      name: 'Clinic Partnership Office',
+      address: 'kurunegala',
+      phone: '+94 37 555 7890',
       hours: '9AM-5PM Weekdays',
-      services: ['Cardiology', 'Neurology', 'Orthopedics', 'Oncology'],
+      services: ['Clinic Registration', 'Platform Integration', 'Technical Support', 'Partnership Programs'],
       image: '/api/placeholder/400/300'
     }
   ];
@@ -114,21 +127,21 @@ const ContactUs = () => {
   const testimonials = [
     {
       name: 'Sarah Johnson',
-      text: 'The care I received was exceptional. The staff was professional and compassionate.',
+      text: 'MediFlow platform made it so easy to connect with the right clinic. Found my doctor and booked appointment in minutes!',
       rating: 5,
-      department: 'Emergency Care'
+      department: 'Patient Platform User'
     },
     {
-      name: 'Michael Chen',
-      text: 'Best medical facility in the city. Clean, modern, and the doctors are top-notch.',
+      name: 'Dr. Michael Chen',
+      text: 'Best healthcare platform for clinics. Our patient management has improved dramatically since joining MediFlow.',
       rating: 5,
-      department: 'General Medicine'
+      department: 'Partner Clinic'
     },
     {
       name: 'Emily Rodriguez',
-      text: 'Quick response time and excellent follow-up care. Highly recommend!',
+      text: 'The platform support team is amazing. Quick response time and excellent help with clinic integration.',
       rating: 5,
-      department: 'Surgery'
+      department: 'Clinic Administrator'
     }
   ];
 
@@ -143,33 +156,64 @@ const ContactUs = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    try{
+      const response = await axios.post('/api/message/send-message',{
+        name: formData.name,
+        email:formData.email,
+        phone:formData.phone,
+        department:formData.department,
+        subject:formData.subject,
+        message:formData.message,
+      });
+
+      if(response.data.success){
+        console.log('Message sent successfully:', response.data.data);
+        success('Message sent successfully! We will contact you soon.');
+        
+        // Reset form only on success
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          subject: '',
+          message: '',
+          department: 'general'
+        });
+        
+        setSubmitted(true);
+        setTimeout(() => setSubmitted(false), 5000);
+      }else{
+        toastError('Failed to send message. Please try again later.');
+      }
+
+    }catch(error){
+      console.error('Error sending message:', error);
+      if(error.response) {
+        // Server responded with error status
+        toastError(error.response.data.message || 'Server error occurred');
+      } else if(error.request) {
+        // Network error
+        toastError('Network error. Please check your connection.');
+      } else {
+        // Other error
+        toastError('An error occurred while sending your message. Please try again later.');
+      }
+    }
     
     setIsSubmitting(false);
-    setSubmitted(true);
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      subject: '',
-      message: '',
-      department: 'general'
-    });
-    
-    setTimeout(() => setSubmitted(false), 5000);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <>
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50">
       <LandingNav />
       
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 text-white">
+      <section className="relative overflow-hidden bg-linear-to-br from-blue-600 via-blue-700 to-indigo-800 text-white">
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="absolute inset-0">
           <div className="absolute top-20 left-10 w-96 h-96 bg-blue-400/20 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-20 right-10 w-[500px] h-[500px] bg-purple-400/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute bottom-20 right-10 w-125 h-125 bg-purple-400/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-indigo-400/20 rounded-full blur-3xl animate-pulse delay-500"></div>
         </div>
         
@@ -181,23 +225,20 @@ const ContactUs = () => {
             className="text-center"
           >
             <div className="flex justify-center mb-6">
-              <div className="p-4 bg-white/10 backdrop-blur-sm rounded-3xl border border-white/20">
-                <MessageCircle className="w-16 h-16 text-white" />
-              </div>
             </div>
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
-              Get in Touch
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-linear-to-r from-white to-blue-100 bg-clip-text text-transparent">
+              Connect with MediFlow Platform
             </h1>
             <p className="text-xl md:text-2xl text-blue-100 max-w-4xl mx-auto mb-8">
-              We're here to help you on your healthcare journey. Reach out to our dedicated team for any questions, concerns, or appointments.
+              We're here to help you navigate our healthcare platform. Reach out to our dedicated team for any questions about connecting with clinics, managing appointments, or platform support.
             </p>
             
             {/* Quick Contact Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
               {[
-                { icon: Phone, label: "24/7 Support", value: "Always Available" },
+                { icon: Phone, label: "24/7 Support", value: "Platform Available" },
                 { icon: Clock, label: "Response Time", value: "< 2 Hours" },
-                { icon: Users, label: "Expert Staff", value: "150+ Professionals" },
+                { icon: Users, label: "Partner Clinics", value: "300+ Clinics" },
                 { icon: Star, label: "Satisfaction", value: "98%" }
               ].map((stat, index) => (
                 <motion.div
@@ -218,8 +259,8 @@ const ContactUs = () => {
       </section>
 
       {/* Contact Methods */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-15 bg-linear-to-r from-blue-100 to-emerald-100">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -232,7 +273,7 @@ const ContactUs = () => {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+          <div className="grid grid-cols-5 gap-6 mb-16 max-w-none mx-auto px-4">
             {contactMethods.map((method, index) => (
               <motion.button
                 key={method.id}
@@ -240,10 +281,10 @@ const ContactUs = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 onClick={() => setActiveContactMethod(method.id)}
-                className={`relative p-6 rounded-3xl transition-all duration-300 ${
+                className={`relative py-5 px-5 rounded-3xl transition-all duration-300 cursor-pointer min-h-50 flex flex-col justify-center w-full ${
                   activeContactMethod === method.id
-                    ? 'bg-gradient-to-br ' + method.color + ' text-white shadow-2xl scale-105'
-                    : 'bg-white border border-gray-200 hover:border-gray-300 hover:shadow-lg'
+                    ? 'bg-linear-to-br ' + method.color + ' text-white shadow-2xl scale-105'
+                    : 'bg-white border border-black/30 hover:border-gray-300 hover:shadow-lg'
                 }`}
               >
                 <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-4 ${
@@ -268,7 +309,7 @@ const ContactUs = () => {
                 {activeContactMethod === method.id && (
                   <motion.div
                     layoutId="activeIndicator"
-                    className="absolute inset-0 rounded-3xl bg-gradient-to-br opacity-10 pointer-events-none"
+                    className="absolute inset-0 rounded-3xl bg-linear-to-br opacity-10 pointer-events-none"
                   />
                 )}
               </motion.button>
@@ -283,10 +324,10 @@ const ContactUs = () => {
               transition={{ duration: 0.5 }}
               className="max-w-4xl mx-auto"
             >
-              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl p-8 md:p-12 shadow-xl">
+              <div className="bg-linear-to-br from-blue-50 to-indigo-50 rounded-3xl p-8 md:p-12 shadow-xl">
                 <div className="text-center mb-8">
                   <h3 className="text-3xl font-bold text-gray-900 mb-4">Send Us a Message</h3>
-                  <p className="text-gray-600">We'll get back to you within 24 hours</p>
+                  <p className="text-gray-600">We'll get back to you within 24 hours about platform inquiries</p>
                 </div>
 
                 {submitted ? (
@@ -316,7 +357,7 @@ const ContactUs = () => {
                           onChange={handleChange}
                           required
                           className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                          placeholder="John Doe"
+                          placeholder="Enter your name"
                         />
                       </div>
                       <div>
@@ -331,7 +372,7 @@ const ContactUs = () => {
                           onChange={handleChange}
                           required
                           className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                          placeholder="john@example.com"
+                          placeholder="eg; test@gmail.com"
                         />
                       </div>
                     </div>
@@ -348,7 +389,7 @@ const ContactUs = () => {
                           value={formData.phone}
                           onChange={handleChange}
                           className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                          placeholder="+1 (555) 123-4567"
+                          placeholder="eg; +94 37 3445 678"
                         />
                       </div>
                       <div>
@@ -404,7 +445,7 @@ const ContactUs = () => {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold py-4 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                      className="w-full bg-linear-to-r from-blue-600 to-indigo-600 text-white font-semibold py-4 rounded-xl cursor-pointer hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
                     >
                       {isSubmitting ? (
                         <>
@@ -437,27 +478,27 @@ const ContactUs = () => {
                   <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                     <Phone className="w-10 h-10 text-green-600" />
                   </div>
-                  <h3 className="text-3xl font-bold text-gray-900 mb-4">Call Us Directly</h3>
-                  <p className="text-gray-600 mb-8">Our friendly staff is ready to assist you</p>
+                  <h3 className="text-3xl font-bold text-gray-900 mb-4">Call Our Platform Support</h3>
+                  <p className="text-gray-600 mb-8">Our platform team is ready to assist you</p>
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-8">
                   <div className="bg-white rounded-2xl p-6 shadow-lg">
-                    <h4 className="text-xl font-bold text-gray-900 mb-4">Emergency Hotline</h4>
-                    <div className="text-3xl font-bold text-green-600 mb-2">+1 (555) 123-4567</div>
-                    <p className="text-gray-600 mb-4">24/7 Available for medical emergencies</p>
+                    <h4 className="text-xl font-bold text-gray-900 mb-4">Platform Emergency Hotline</h4>
+                    <div className="text-3xl font-bold text-green-600 mb-2">+94 37 433 5757</div>
+                    <p className="text-gray-600 mb-4">24/7 Available for platform emergencies</p>
                     <div className="flex items-center space-x-2 text-green-600">
                       <Shield className="w-5 h-5" />
-                      <span className="font-medium">Emergency Care</span>
+                      <span className="font-medium">Platform Emergency Support</span>
                     </div>
                   </div>
                   <div className="bg-white rounded-2xl p-6 shadow-lg">
-                    <h4 className="text-xl font-bold text-gray-900 mb-4">General Inquiries</h4>
-                    <div className="text-3xl font-bold text-blue-600 mb-2">+1 (555) 987-6543</div>
-                    <p className="text-gray-600 mb-4">Mon-Fri: 8AM-8PM, Sat-Sun: 9AM-5PM</p>
+                    <h4 className="text-xl font-bold text-gray-900 mb-4">Platform Inquiries</h4>
+                    <div className="text-3xl font-bold text-blue-600 mb-2">+94 37 555 6565</div>
+                    <p className="text-gray-600 mb-4">Mon-Fri: 9AM-6PM, Sat-Sun: 10AM-4PM</p>
                     <div className="flex items-center space-x-2 text-blue-600">
                       <Clock className="w-5 h-5" />
-                      <span className="font-medium">Business Hours</span>
+                      <span className="font-medium">Platform Support Hours</span>
                     </div>
                   </div>
                 </div>
@@ -466,9 +507,83 @@ const ContactUs = () => {
                   <div className="flex items-start space-x-3">
                     <AlertCircle className="w-5 h-5 text-yellow-600 mt-0.5" />
                     <div>
-                      <h5 className="font-semibold text-yellow-800">When to Call Emergency</h5>
+                      <h5 className="font-semibold text-yellow-800">When to Call Platform Emergency</h5>
                       <p className="text-yellow-700 text-sm mt-1">
-                        For life-threatening emergencies, call our emergency hotline or visit the nearest emergency room immediately.
+                        For platform-related emergencies, urgent clinic access issues, or critical system problems, call our emergency hotline immediately.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Email Contact */}
+          {activeContactMethod === 'email' && (
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="max-w-4xl mx-auto"
+            >
+              <div className="bg-gradient-to-br from-red-50 to-orange-50 rounded-3xl p-8 md:p-12 shadow-xl">
+                <div className="text-center mb-8">
+                  <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Mail className="w-10 h-10 text-red-600" />
+                  </div>
+                  <h3 className="text-3xl font-bold text-gray-900 mb-4">Send Us an Email</h3>
+                  <p className="text-gray-600 mb-8">We'll respond to your email within 24 hours</p>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-8">
+                  <div className="bg-white rounded-2xl p-6 shadow-lg">
+                    <h4 className="text-xl font-bold text-gray-900 mb-4">Platform Support</h4>
+                    <div className="text-2xl font-bold text-red-600 mb-2">support@mediflow.com</div>
+                    <p className="text-gray-600 mb-4">For general platform inquiries and technical support</p>
+                    <div className="flex items-center space-x-2 text-red-600">
+                      <MessageCircle className="w-5 h-5" />
+                      <span className="font-medium">General Platform Support</span>
+                    </div>
+                  </div>
+                  <div className="bg-white rounded-2xl p-6 shadow-lg">
+                    <h4 className="text-xl font-bold text-gray-900 mb-4">Clinic Partnerships</h4>
+                    <div className="text-2xl font-bold text-red-600 mb-2">partnerships@mediflow.com</div>
+                    <p className="text-gray-600 mb-4">For clinics interested in joining our platform</p>
+                    <div className="flex items-center space-x-2 text-red-600">
+                      <Heart className="w-5 h-5" />
+                      <span className="font-medium">Partnership Inquiries</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-8 grid md:grid-cols-2 gap-6">
+                  <div className="bg-white rounded-2xl p-6 shadow-lg">
+                    <h4 className="text-xl font-bold text-gray-900 mb-4">Emergency Support</h4>
+                    <div className="text-2xl font-bold text-red-600 mb-2">emergency@mediflow.com</div>
+                    <p className="text-gray-600 mb-4">For urgent platform-related issues</p>
+                    <div className="flex items-center space-x-2 text-red-600">
+                      <Shield className="w-5 h-5" />
+                      <span className="font-medium">Urgent Support</span>
+                    </div>
+                  </div>
+                  <div className="bg-white rounded-2xl p-6 shadow-lg">
+                    <h4 className="text-xl font-bold text-gray-900 mb-4">Billing & Accounts</h4>
+                    <div className="text-2xl font-bold text-blue-600 mb-2">billing@mediflow.com</div>
+                    <p className="text-gray-600 mb-4">For billing inquiries and account management</p>
+                    <div className="flex items-center space-x-2 text-blue-600">
+                      <Globe className="w-5 h-5" />
+                      <span className="font-medium">Financial Support</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-8 bg-blue-50 border border-blue-200 rounded-xl p-4">
+                  <div className="flex items-start space-x-3">
+                    <Mail className="w-5 h-5 text-blue-600 mt-0.5" />
+                    <div>
+                      <h5 className="font-semibold text-blue-800">Email Response Times</h5>
+                      <p className="text-blue-700 text-sm mt-1">
+                        We typically respond to emails within 24 hours. For urgent matters, please use our emergency hotline or live chat for immediate assistance.
                       </p>
                     </div>
                   </div>
@@ -486,8 +601,8 @@ const ContactUs = () => {
               className="max-w-6xl mx-auto"
             >
               <div className="text-center mb-12">
-                <h3 className="text-3xl font-bold text-gray-900 mb-4">Visit Our Locations</h3>
-                <p className="text-gray-600">Find the nearest MediFlow facility to you</p>
+                <h3 className="text-3xl font-bold text-gray-900 mb-4">Visit Our Platform Offices</h3>
+                <p className="text-gray-600">Find the nearest MediFlow platform support center</p>
               </div>
 
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -499,8 +614,8 @@ const ContactUs = () => {
                     transition={{ duration: 0.6, delay: index * 0.1 }}
                     className="bg-white rounded-3xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
                   >
-                    <div className="h-48 bg-gradient-to-br from-purple-100 to-indigo-100 relative">
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                    <div className="h-48 bg-linear-to-br from-purple-100 to-indigo-100 relative">
+                      <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent"></div>
                       <div className="absolute bottom-4 left-4 right-4">
                         <div className="bg-white/90 backdrop-blur-sm rounded-xl p-3">
                           <div className="flex items-center space-x-2">
@@ -533,7 +648,10 @@ const ContactUs = () => {
                           ))}
                         </div>
                       </div>
-                      <button className="w-full mt-6 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium py-3 rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all">
+                      <button 
+                        onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(location.address)}`, '_blank')}
+                        className="w-full mt-6 bg-linear-to-r from-purple-600 to-indigo-600 text-white font-medium py-3 cursor-pointer rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all"
+                      >
                         Get Directions
                       </button>
                     </div>
@@ -557,7 +675,7 @@ const ContactUs = () => {
                     <MessageCircle className="w-10 h-10 text-orange-600" />
                   </div>
                   <h3 className="text-3xl font-bold text-gray-900 mb-4">Start a Live Chat</h3>
-                  <p className="text-gray-600 mb-8">Get instant answers from our support team</p>
+                  <p className="text-gray-600 mb-8">Get instant answers from our platform support team</p>
                 </div>
 
                 <div className="bg-white rounded-2xl p-8 shadow-lg">
@@ -609,7 +727,7 @@ const ContactUs = () => {
       </section>
 
       {/* Testimonials */}
-      <section className="py-20 bg-white">
+      <section className="py-25 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -617,9 +735,9 @@ const ContactUs = () => {
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">What Our Patients Say</h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">What Our Platform Users Say</h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Real experiences from real patients
+              Real experiences from patients and clinics using our platform
             </p>
           </motion.div>
 
@@ -649,7 +767,7 @@ const ContactUs = () => {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
+      <section className="py-15 bg-linear-to-br from-gray-50 to-blue-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -664,20 +782,20 @@ const ContactUs = () => {
           <div className="space-y-4">
             {[
               {
-                question: "How do I schedule an appointment?",
-                answer: "You can schedule an appointment by calling our hotline, using our online booking system, or visiting any of our locations in person."
+                question: "How do I find and book appointments with clinics through MediFlow?",
+                answer: "You can search for clinics by specialty, location, or availability on our platform, then book appointments instantly through our secure booking system."
               },
               {
-                question: "What insurance plans do you accept?",
-                answer: "We accept most major insurance plans. Please contact our billing department to verify your specific coverage."
+                question: "How can my clinic join the MediFlow platform?",
+                answer: "Clinics can join by contacting our partnership team. We'll guide you through the integration process and help you set up your clinic profile."
               },
               {
-                question: "Do you offer emergency services?",
-                answer: "Yes, our main hospital provides 24/7 emergency care services for all medical emergencies."
+                question: "Is my medical data secure on the MediFlow platform?",
+                answer: "Yes, we use industry-standard encryption and comply with healthcare data protection regulations to ensure your medical information remains secure."
               },
               {
-                question: "How can I access my medical records?",
-                answer: "You can access your medical records through our patient portal or request them from our medical records department."
+                question: "How do I access my appointment history and medical records?",
+                answer: "You can access all your appointment history, prescriptions, and medical records through your secure patient dashboard on the MediFlow platform."
               }
             ].map((faq, index) => (
               <motion.div
@@ -703,35 +821,35 @@ const ContactUs = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 text-white">
+      <section className="py-15 bg-linear-to-r from-blue-100 to-emerald-100 text-Black">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <div className="flex justify-center mb-6">
-              <div className="p-4 bg-white/10 backdrop-blur-sm rounded-3xl border border-white/20">
-                <Heart className="w-12 h-12 text-white" />
+            {/* <div className="flex justify-center mb-6">
+              <div className="p-4 bg-black/10 backdrop-blur-sm rounded-3xl border border-black/20">
+                <Heart className="w-12 h-12 text-blue-700" />
               </div>
-            </div>
+            </div> */}
             <h2 className="text-4xl font-bold mb-6">
-              Your Health Journey Starts Here
+              Your Healthcare Platform Journey Starts Here
             </h2>
-            <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-              Take the first step towards better health. Our compassionate team is ready to support you every step of the way.
+            <p className="text-xl text-blue-700 font-medium mb-8 max-w-2xl mx-auto">
+              Take the first step towards better healthcare access. Our platform team is ready to help you connect with the right clinics and manage your health journey efficiently.
             </p>
-            <div className="flex flex-wrap gap-4 justify-center">
+           <div className="flex flex-wrap gap-4 justify-center">
               <Link 
-                to="/appointments"
-                className="inline-flex items-center px-8 py-4 bg-white text-blue-700 font-semibold rounded-xl hover:bg-blue-50 transition-all transform hover:scale-105"
+                to="/signUp"
+                className="inline-flex items-center px-8 py-4 bg-blue-700 text-white font-semibold rounded-xl hover:bg-blue-600 transition-all transform hover:scale-102"
               >
-                Book Appointment
+                Get Started
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Link>
               <Link 
-                to="/about-us"
-                className="inline-flex items-center px-8 py-4 bg-blue-500/20 backdrop-blur-sm text-white font-semibold rounded-xl hover:bg-blue-500/30 transition-all border border-white/20"
+                to="/contact-us"
+                className="inline-flex items-center px-8 py-4  backdrop-blur-sm text-black font-semibold rounded-xl hover:bg-black/10 transition-all border border-black"
               >
                 Learn More
               </Link>
@@ -739,7 +857,13 @@ const ContactUs = () => {
           </motion.div>
         </div>
       </section>
+      <LandingFooter/>
     </div>
+     <ToastContainer
+        toasts={toasts}
+        removeToast={removeToast}
+      />
+    </>
   );
 };
 
