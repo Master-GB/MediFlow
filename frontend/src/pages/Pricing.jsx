@@ -167,7 +167,7 @@ const PricingPage = () => {
   return (
     <div>
         <LandingNav/>
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-blue-50">
+    <div className="min-h-screen bg-linear-to-b from-slate-50 via-white to-blue-50">
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-linear-to-br from-blue-600 via-blue-700 to-indigo-800 text-white">
         <div className="absolute inset-0 bg-black/20"></div>
@@ -234,7 +234,7 @@ const PricingPage = () => {
               >
                 {plan.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-20">
-                    <div className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 py-2 rounded-full text-sm font-semibold shadow-lg">
+                    <div className="bg-linear-to-r from-purple-500 to-purple-600 text-white px-6 py-2 rounded-full text-sm font-semibold shadow-lg">
                       Most Popular
                     </div>
                   </div>
@@ -244,7 +244,7 @@ const PricingPage = () => {
                   plan.popular ? 'ring-4 ring-purple-500/20' : ''
                 }`}>
                   {/* Plan Header */}
-                  <div className={`bg-gradient-to-r ${plan.color} p-8 text-white relative overflow-hidden`}>
+                  <div className={`bg-linear-to-r ${plan.color} p-8 text-white relative overflow-hidden`}>
                     <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
                     <div className="relative z-10">
                       <div className="flex items-center justify-center w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl mb-4">
@@ -271,11 +271,11 @@ const PricingPage = () => {
                       {plan.features.map((feature, idx) => (
                         <div key={idx} className="flex items-start gap-3">
                           {feature.included ? (
-                            <div className="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
+                            <div className="shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
                               <Check className="w-4 h-4 text-green-600" />
                             </div>
                           ) : (
-                            <div className="flex-shrink-0 w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center">
+                            <div className="shrink-0 w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center">
                               <X className="w-4 h-4 text-gray-400" />
                             </div>
                           )}
@@ -290,7 +290,7 @@ const PricingPage = () => {
                       to={`/signup?plan=${plan.id}&billing=${billingCycle}`}
                       className={`w-full py-4 px-6 rounded-xl font-semibold text-center transition-all transform hover:scale-105 ${
                         plan.popular
-                          ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg hover:shadow-xl'
+                          ? 'bg-linear-to-r from-purple-500 to-purple-600 text-white shadow-lg hover:shadow-xl'
                           : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
                       }`}
                     >
@@ -425,7 +425,7 @@ const PricingPage = () => {
                 </div>
                 <p className="text-gray-700 mb-6 italic">"{testimonial.content}"</p>
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full"></div>
+                  <div className="w-12 h-12 bg-linear-to-br from-blue-400 to-purple-400 rounded-full"></div>
                   <div>
                     <div className="font-semibold text-gray-900">{testimonial.name}</div>
                     <div className="text-sm text-gray-600">{testimonial.role}</div>
