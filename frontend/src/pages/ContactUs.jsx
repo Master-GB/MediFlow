@@ -126,19 +126,19 @@ const ContactUs = () => {
 
   const testimonials = [
     {
-      name: 'Sarah Johnson',
+      name: 'Gihan Bandara',
       text: 'MediFlow platform made it so easy to connect with the right clinic. Found my doctor and booked appointment in minutes!',
       rating: 5,
       department: 'Patient Platform User'
     },
     {
-      name: 'Dr. Michael Chen',
+      name: 'Dr. Sadun Perera',
       text: 'Best healthcare platform for clinics. Our patient management has improved dramatically since joining MediFlow.',
       rating: 5,
       department: 'Partner Clinic'
     },
     {
-      name: 'Emily Rodriguez',
+      name: 'Kasun Kalhara',
       text: 'The platform support team is amazing. Quick response time and excellent help with clinic integration.',
       rating: 5,
       department: 'Clinic Administrator'
@@ -473,7 +473,7 @@ const ContactUs = () => {
               transition={{ duration: 0.5 }}
               className="max-w-4xl mx-auto"
             >
-              <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-3xl p-8 md:p-12 shadow-xl">
+              <div className="bg-linear-to-br from-green-50 to-emerald-50 rounded-3xl p-8 md:p-12 shadow-xl">
                 <div className="text-center mb-8">
                   <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                     <Phone className="w-10 h-10 text-green-600" />
@@ -526,7 +526,7 @@ const ContactUs = () => {
               transition={{ duration: 0.5 }}
               className="max-w-4xl mx-auto"
             >
-              <div className="bg-gradient-to-br from-red-50 to-orange-50 rounded-3xl p-8 md:p-12 shadow-xl">
+              <div className="bg-linear-to-br from-red-50 to-orange-50 rounded-3xl p-8 md:p-12 shadow-xl">
                 <div className="text-center mb-8">
                   <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
                     <Mail className="w-10 h-10 text-red-600" />
@@ -669,7 +669,7 @@ const ContactUs = () => {
               transition={{ duration: 0.5 }}
               className="max-w-4xl mx-auto"
             >
-              <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-3xl p-8 md:p-12 shadow-xl">
+              <div className="bg-linear-to-br from-orange-50 to-red-50 rounded-3xl p-8 md:p-12 shadow-xl">
                 <div className="text-center mb-8">
                   <div className="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
                     <MessageCircle className="w-10 h-10 text-orange-600" />
@@ -700,7 +700,7 @@ const ContactUs = () => {
                       placeholder="Type your message..."
                       className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     />
-                    <button className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-6 py-3 rounded-xl hover:from-orange-600 hover:to-red-600 transition-all">
+                    <button className="bg-linear-to-r from-orange-500 to-red-500 text-white px-6 py-3 rounded-xl hover:from-orange-600 hover:to-red-600 transition-all">
                       <Send className="w-5 h-5" />
                     </button>
                   </div>
@@ -748,7 +748,7 @@ const ContactUs = () => {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 shadow-lg"
+                className="bg-linear-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 shadow-lg"
               >
                 <div className="flex items-center mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (
@@ -806,7 +806,7 @@ const ContactUs = () => {
                 className="bg-white rounded-2xl p-6 shadow-lg"
               >
                 <div className="flex items-start space-x-4">
-                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center shrink-0">
                     <span className="text-blue-600 font-semibold text-sm">{index + 1}</span>
                   </div>
                   <div>
