@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronDown, Menu, X, Users, Stethoscope, Building, FileText, Phone } from 'lucide-react';
 
 const LandingNav = ({ className = '' }) => {
   const [open, setOpen] = useState(false);
@@ -88,18 +90,54 @@ const LandingNav = ({ className = '' }) => {
                   </svg>
                 </button>
 
-                <div
-                  className={`origin-top-left absolute left-0 top-full w-44 rounded-md shadow-lg bg-[#F0F0F0] ring-1 ring-black ring-opacity-5 focus:outline-none ${resourcesOpen ? "block" : "hidden"}`}
-                  role="menu"
-                  aria-label="Features submenu"
-                  style={{ zIndex: 60 }}
-                >
-                  <div className="py-1">
-                    <a href="/docs" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 cursor-pointer">Docs</a>
-                    <a href="/blog" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 cursor-pointer">Blog</a>
-                    <a href="/support" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 cursor-pointer">Support</a>
-                  </div>
-                </div>
+                <AnimatePresence>
+                  {resourcesOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                      transition={{ duration: 0.2, ease: "easeOut" }}
+                      className={`absolute left-0 top-full mt-2 w-125 rounded-2xl shadow-2xl bg-black/75 backdrop-blur-xl border border-white/20 ${resourcesOpen ? "block" : "hidden"}`}
+                      role="menu"
+                      aria-label="Platform submenu"
+                      style={{ zIndex: 1000 }}
+                    >
+                      <div className="p-3">
+                        <div className="grid grid-cols-2 gap-2">
+                          
+                          <a href="/ai-symptom-analyzer" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-100 hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 hover:text-white transition-all duration-200 group">
+                            <FileText className="w-4 h-4 text-gray-300" />
+                            <span className="font-medium text-sm">AI Symptom Analyzer</span>
+                          </a>
+                          <a href="/smart-clinic-management" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-100 hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 hover:text-white transition-all duration-200 group">
+                            <Building className="w-4 h-4 text-gray-300" />
+                            <span className="font-medium text-sm">Clinic Management</span>
+                          </a>
+                          <a href="/doctor-workflow-optimization" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-100 hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 hover:text-white transition-all duration-200 group">
+                            <Stethoscope className="w-4 h-4 text-gray-300" />
+                            <span className="font-medium text-sm">Doctor Workflow</span>
+                          </a>
+                          <a href="/pharmacy-prescription-management" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-100 hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 hover:text-white transition-all duration-200 group">
+                            <FileText className="w-4 h-4 text-gray-300" />
+                            <span className="font-medium text-sm">Pharmacy Management</span>
+                          </a>
+                          <a href="/appointment-management" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-100 hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 hover:text-white transition-all duration-200 group">
+                            <Users className="w-4 h-4 text-gray-300" />
+                            <span className="font-medium text-sm">Appointment Management</span>
+                          </a>
+                          <a href="/telemedicine" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-100 hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 hover:text-white transition-all duration-200 group">
+                            <Phone className="w-4 h-4 text-gray-300" />
+                            <span className="font-medium text-sm">Telemedicine</span>
+                          </a>
+                          <a href="/reports-analytics" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-100 hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 hover:text-white transition-all duration-200 group">
+                            <FileText className="w-4 h-4 text-gray-300" />
+                            <span className="font-medium text-sm">Reports & Analytics</span>
+                          </a>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
               <div 
@@ -126,19 +164,41 @@ const LandingNav = ({ className = '' }) => {
                   </svg>
                 </button>
 
-                <div
-                  className={`origin-top-left absolute left-0 top-full w-48 rounded-md shadow-lg bg-[#F0F0F0] ring-1 ring-black ring-opacity-5 focus:outline-none ${howItWorksOpen ? "block" : "hidden"}`}
-                  role="menu"
-                  aria-label="How It Works submenu"
-                  style={{ zIndex: 60 }}
-                >
-                  <div className="py-1">
-                    <a href="#for-patients" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">For Patients</a>
-                    <a href="#for-doctors" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">For Doctors</a>
-                    <a href="#for-clinics" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">For Clinics</a>
-                    <a href="#for-pharmacists" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">For Pharmacists</a>
-                  </div>
-                </div>
+                <AnimatePresence>
+                  {howItWorksOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                      transition={{ duration: 0.2, ease: "easeOut" }}
+                      className={`absolute left-0 top-full mt-2 w-106 rounded-2xl shadow-2xl bg-black/75 backdrop-blur-xl border border-white/20 ${howItWorksOpen ? "block" : "hidden"}`}
+                      role="menu"
+                      aria-label="For Users submenu"
+                      style={{ zIndex: 1000 }}
+                    >
+                      <div className="p-3">
+                        <div className="grid grid-cols-2 gap-2">
+                          <a href="#for-patients" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-100 hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 hover:text-white transition-all duration-200 group">
+                            <Users className="w-4 h-4 text-gray-300" />
+                            <span className="font-medium text-sm">For Patients</span>
+                          </a>
+                          <a href="#for-doctors" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-100 hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 hover:text-white transition-all duration-200 group">
+                            <Stethoscope className="w-4 h-4 text-gray-300" />
+                            <span className="font-medium text-sm">For Doctors</span>
+                          </a>
+                          <a href="#for-clinics" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-100 hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 hover:text-white transition-all duration-200 group">
+                            <Building className="w-4 h-4 text-gray-300" />
+                            <span className="font-medium text-sm">For Clinics</span>
+                          </a>
+                          <a href="#for-pharmacists" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-100 hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 hover:text-white transition-all duration-200 group">
+                            <FileText className="w-4 h-4 text-gray-300" />
+                            <span className="font-medium text-sm">For Pharmacists</span>
+                          </a>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
               
               <a href="/pricing-page" className={`px-3 py-2 rounded-md font-medium cursor-pointer transition-colors ${
@@ -189,50 +249,96 @@ const LandingNav = ({ className = '' }) => {
                 onClick={() => setOpen(s => !s)}
                 aria-expanded={open}
                 aria-controls="mobile-menu"
-                className="inline-flex items-center justify-center p-2 rounded-md text-slate-800 hover:bg-slate-100 focus:outline-none"
+                className="relative inline-flex items-center justify-center p-3 rounded-xl text-slate-800 hover:bg-slate-100 focus:outline-none transition-all duration-300 hover:scale-110"
               >
-                <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden>
-                  <path d={open ? "M6 6l12 12M6 18L18 6" : "M3 6h18M3 12h18M3 18h18"} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-                </svg>
+                <motion.div
+                  animate={{ rotate: open ? 180 : 0 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                >
+                  <Menu width="24" height="24" className="w-6 h-6" />
+                </motion.div>
               </button>
             </div>
           </div>
         </div>
 
         {/* Mobile menu */}
-        <div id="mobile-menu" className={`${open ? "block" : "hidden"} sm:hidden`}>
-          <div className="pt-4 pb-6 space-y-4 border-t" style={{ borderColor: "#F0F0F0" }}>
-            <a href="#features" className="block px-3 py-2 rounded-md text-base font-medium text-slate-800 hover:bg-slate-50">Features</a>
-            <a href="#pricing" className="block px-3 py-2 rounded-md text-base font-medium text-slate-800 hover:bg-slate-50">Pricing</a>
-
-            <div className="px-3">
-              <button
-                onClick={() => setResourcesOpen(s => !s)}
-                aria-expanded={resourcesOpen}
-                className="w-full flex items-center justify-between px-3 py-2 rounded-md text-slate-800 hover:bg-slate-50 font-medium"
-              >
-                <span>Resources</span>
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" aria-hidden>
-                  <path d={resourcesOpen ? "M18 15l-6-6-6 6" : "M6 9l6 6 6-6"} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
-
-              <div className={`${resourcesOpen ? "block" : "hidden"} mt-2 space-y-1`}>
-                <a href="/docs" className="block px-4 py-2 rounded-md text-slate-700 hover:bg-slate-50">Docs</a>
-                <a href="/blog" className="block px-4 py-2 rounded-md text-slate-700 hover:bg-slate-50">Blog</a>
-                <a href="/support" className="block px-4 py-2 rounded-md text-slate-700 hover:bg-slate-50">Support</a>
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              initial={{ opacity: 0, x: -300 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -300 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              id="mobile-menu" 
+              className="fixed inset-0 top-16 z-50 sm:hidden"
+            >
+              <div className="bg-black/98 backdrop-blur-xl h-full overflow-y-auto">
+                <div className="px-4 py-6 space-y-4">
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-semibold text-white mb-3">Platform</h3>
+                    <a href="/docs" className="flex items-center gap-3 px-4 py-3 rounded-xl text-white hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 transition-all duration-200">
+                      <FileText className="w-5 h-5 text-gray-300" />
+                      <span className="font-medium">Documentation</span>
+                    </a>
+                    <a href="/blog" className="flex items-center gap-3 px-4 py-3 rounded-xl text-white hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 transition-all duration-200">
+                      <FileText className="w-5 h-5 text-gray-300" />
+                      <span className="font-medium">Blog & Resources</span>
+                    </a>
+                    <a href="/support" className="flex items-center gap-3 px-4 py-3 rounded-xl text-white hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 transition-all duration-200">
+                      <Phone className="w-5 h-5 text-gray-300" />
+                      <span className="font-medium">Support Center</span>
+                    </a>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-semibold text-white mb-3">For Users</h3>
+                    <a href="#for-patients" className="flex items-center gap-3 px-4 py-3 rounded-xl text-white hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 transition-all duration-200">
+                      <Users className="w-5 h-5 text-gray-300" />
+                      <span className="font-medium">For Patients</span>
+                    </a>
+                    <a href="#for-doctors" className="flex items-center gap-3 px-4 py-3 rounded-xl text-white hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 transition-all duration-200">
+                      <Stethoscope className="w-5 h-5 text-gray-300" />
+                      <span className="font-medium">For Doctors</span>
+                    </a>
+                    <a href="#for-clinics" className="flex items-center gap-3 px-4 py-3 rounded-xl text-white hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 transition-all duration-200">
+                      <Building className="w-5 h-5 text-gray-300" />
+                      <span className="font-medium">For Clinics</span>
+                    </a>
+                    <a href="#for-pharmacists" className="flex items-center gap-3 px-4 py-3 rounded-xl text-white hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 transition-all duration-200">
+                      <FileText className="w-5 h-5 text-gray-300" />
+                      <span className="font-medium">For Pharmacists</span>
+                    </a>
+                  </div>
+                  
+                  <div className="pt-4 space-y-2">
+                    <a href="/about-us" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-700 hover:bg-linear-to-r hover:from-indigo-50 hover:to-purple-50 hover:text-indigo-700 transition-all duration-200">
+                      <FileText className="w-5 h-5 text-indigo-600" />
+                      <span className="font-medium">About Us</span>
+                    </a>
+                    <a href="/contact-us" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-700 hover:bg-linear-to-r hover:from-pink-50 hover:to-red-50 hover:text-pink-700 transition-all duration-200">
+                      <Phone className="w-5 h-5 text-pink-600" />
+                      <span className="font-medium">Contact Us</span>
+                    </a>
+                    <a href="/pricing" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-700 hover:bg-linear-to-r hover:from-amber-50 hover:to-orange-50 hover:text-amber-700 transition-all duration-200">
+                      <FileText className="w-5 h-5 text-amber-600" />
+                      <span className="font-medium">Pricing</span>
+                    </a>
+                  </div>
+                  
+                  <div className="px-3 pt-4 space-y-2">
+                    <a href="/signIn" className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-800 hover:bg-linear-to-r hover:from-slate-100 hover:to-slate-200 hover:text-slate-900 transition-all duration-200">
+                      <span>Sign In</span>
+                    </a>
+                    <a href="/signUp" className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl font-semibold bg-linear-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 transform hover:scale-105">
+                      <span>Get Started</span>
+                    </a>
+                  </div>
+                </div>
               </div>
-            </div>
-
-            <a href="/about-us" className="block px-3 py-2 rounded-md text-base font-medium text-slate-800 hover:bg-slate-50">About</a>
-            <a href="/contact" className="block px-3 py-2 rounded-md text-base font-medium text-slate-800 hover:bg-slate-50">Contact</a>
-
-            <div className="px-3 pt-2 space-y-2">
-              <a href="/login" className="block text-center px-4 py-2 rounded-md font-semibold text-slate-800 hover:bg-slate-50">Log in</a>
-              <a href="/register" className="block text-center px-4 py-2 rounded-md bg-linear-to-r from-blue-600 to-indigo-600 text-white font-bold">Get Started</a>
-            </div>
-          </div>
-        </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
     </header>
   );
