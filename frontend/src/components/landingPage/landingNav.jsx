@@ -178,19 +178,19 @@ const LandingNav = ({ className = '' }) => {
                     >
                       <div className="p-3">
                         <div className="grid grid-cols-2 gap-2">
-                          <a href="#for-patients" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-100 hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 hover:text-white transition-all duration-200 group">
+                          <a href="/howItWork-patient" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-100 hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 hover:text-white transition-all duration-200 group">
                             <Users className="w-4 h-4 text-gray-300" />
                             <span className="font-medium text-sm">For Patients</span>
                           </a>
-                          <a href="#for-doctors" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-100 hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 hover:text-white transition-all duration-200 group">
+                          <a href="/howItWork-doctor" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-100 hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 hover:text-white transition-all duration-200 group">
                             <Stethoscope className="w-4 h-4 text-gray-300" />
                             <span className="font-medium text-sm">For Doctors</span>
                           </a>
-                          <a href="#for-clinics" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-100 hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 hover:text-white transition-all duration-200 group">
+                          <a href="/howItWork-clinic" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-100 hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 hover:text-white transition-all duration-200 group">
                             <Building className="w-4 h-4 text-gray-300" />
                             <span className="font-medium text-sm">For Clinics</span>
                           </a>
-                          <a href="#for-pharmacists" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-100 hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 hover:text-white transition-all duration-200 group">
+                          <a href="/howItWork-pharmacists" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-100 hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 hover:text-white transition-all duration-200 group">
                             <FileText className="w-4 h-4 text-gray-300" />
                             <span className="font-medium text-sm">For Pharmacists</span>
                           </a>
@@ -297,15 +297,15 @@ const LandingNav = ({ className = '' }) => {
                       <Users className="w-5 h-5 text-gray-300" />
                       <span className="font-medium">For Patients</span>
                     </a>
-                    <a href="#for-doctors" className="flex items-center gap-3 px-4 py-3 rounded-xl text-white hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 transition-all duration-200">
+                    <a href="/howItWork-doctor" className="flex items-center gap-3 px-4 py-3 rounded-xl text-white hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 transition-all duration-200">
                       <Stethoscope className="w-5 h-5 text-gray-300" />
                       <span className="font-medium">For Doctors</span>
                     </a>
-                    <a href="#for-clinics" className="flex items-center gap-3 px-4 py-3 rounded-xl text-white hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 transition-all duration-200">
+                    <a href="/howItWork-clinic" className="flex items-center gap-3 px-4 py-3 rounded-xl text-white hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 transition-all duration-200">
                       <Building className="w-5 h-5 text-gray-300" />
                       <span className="font-medium">For Clinics</span>
                     </a>
-                    <a href="#for-pharmacists" className="flex items-center gap-3 px-4 py-3 rounded-xl text-white hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 transition-all duration-200">
+                    <a href="/howItWork-pharmacists" className="flex items-center gap-3 px-4 py-3 rounded-xl text-white hover:bg-linear-to-r hover:from-gray-700 hover:to-gray-600 transition-all duration-200">
                       <FileText className="w-5 h-5 text-gray-300" />
                       <span className="font-medium">For Pharmacists</span>
                     </a>

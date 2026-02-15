@@ -483,7 +483,7 @@ export const verifyUserAccount = async (req, res) => {
               <td
                 style="background:#f1f1f5; padding:15px; text-align:center; font-size:13px; color:#777;"
               >
-                © 2025 MediFlow. All rights reserved.
+                © ${new Date().getFullYear()} MediFlow. All rights reserved.
               </td>
             </tr>
           </table>
@@ -589,7 +589,7 @@ export const sendResetOtp = async (req, res) => {
                 </p>
 
                 <p style="margin:12px 0 0; font-size:13px; color:#9ca3af;">
-                  — The Team
+                  — The MediFlow Team
                 </p>
               </td>
             </tr>
@@ -597,7 +597,7 @@ export const sendResetOtp = async (req, res) => {
             <!-- Footer -->
             <tr>
               <td style="background:#f8fafc; padding:14px 20px; text-align:center; color:#9ca3af; font-size:12px;">
-                © ${new Date().getFullYear()} Your Company. All rights reserved.
+                © ${new Date().getFullYear()} MediFlow. All rights reserved.
               </td>
             </tr>
           </table>
