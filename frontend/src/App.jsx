@@ -11,6 +11,10 @@ import AboutUs from './pages/AboutUs.jsx';
 import ContactUs from './pages/ContactUs.jsx';
 import PricingPage from './pages/Pricing.jsx';
 import PatientDashboard from './pages/PatientDashboard.jsx';
+import ForClinic from './pages/HowItWork/forClinic.jsx';
+import ForDoctor from './pages/HowItWork/forDoctor.jsx';
+import ForPatient from './pages/HowItWork/forPatient.jsx';
+import ForPharmacists from './pages/HowItWork/forpharmacists.jsx';
 
 
 const LandingPageLayout = () => {
@@ -28,6 +32,10 @@ const LandingPageLayout = () => {
         <Route path="/contact-us" element={<ContactUs/>}/>
         <Route path="/pricing-page" element={<PricingPage/>}/>
         <Route path ="/patient-dashboard" element={<PatientDashboard/>}/>
+        <Route path ="/howItWork-clinic" element={<ForClinic/>}/>
+        <Route path ="/howItWork-patient" element={<ForPatient/>}/>
+        <Route path ="/howItWork-doctor" element={<ForDoctor/>}/>
+        <Route path ="/howItWork-pharmacists" element={<ForPharmacists/>}/>
       </Routes>
     </div>
     </div>
