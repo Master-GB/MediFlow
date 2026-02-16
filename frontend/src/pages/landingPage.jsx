@@ -216,7 +216,7 @@ const LandingPage = () => {
 
                 {/* Keep the Learn More button exactly the same */}
                 <a
-                  href="#features"
+                  href="/smart-clinic-management"
                   className="inline-flex items-center justify-center px-10 py-2.5 text-lg bg-transparent text-white border-2 border-white/70 hover:border-white font-semibold shadow-md hover:shadow-lg hover:bg-white/10 transition-all"
                 >
                   Learn More

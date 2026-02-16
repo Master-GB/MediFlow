@@ -138,7 +138,7 @@ const ForPatient = () => {
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Link>
               <Link 
-                to="/#features" 
+                to="/appointment-management" 
                 className="inline-flex items-center px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-bold rounded-xl hover:bg-white/20 transition-all border border-white/20"
               >
                 Learn More

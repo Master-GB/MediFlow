@@ -7,14 +7,14 @@ const features = [
         title: 'AI Symptom Analyzer',
         description: 'Advanced AI that helps patients identify potential health issues based on symptoms and provides preliminary assessments.',
         icon: (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-black/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
             </svg>
         ),
         bgColor: 'bg-blue-50',
         hoverColor: 'group-hover:bg-blue-100',
         gradient: 'from-blue-400 to-blue-600',
-        bgUrl: "/src/assets/images/ai.webp",
+        bgUrl: "/src/assets/images/aiFeatw.jpg",
         navigateLink: "/ai-symptom-analyzer"
     },
     {
@@ -22,14 +22,14 @@ const features = [
         title: 'Smart Clinic Management',
         description: 'Comprehensive clinic management system that handles appointments, patient records, and billing in one place.',
         icon: (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-black/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
             </svg>
         ),
         bgColor: 'bg-green-50',
         hoverColor: 'group-hover:bg-green-100',
         gradient: 'from-green-400 to-green-600',
-        bgUrl: "/src/assets/images/clinic.webp",
+        bgUrl: "/src/assets/images/clinicF.png",
         navigateLink: "/smart-clinic-management"
     },
     {
@@ -37,14 +37,14 @@ const features = [
         title: 'Doctor Workflow Optimization',
         description: 'Streamlined workflows for doctors with smart scheduling, patient history access, and prescription management.',
         icon: (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-black/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
             </svg>
         ),
         bgColor: 'bg-purple-50',
         hoverColor: 'group-hover:bg-purple-100',
         gradient: 'from-purple-400 to-purple-600',
-        bgUrl: "/src/assets/images/doctor1.webp",
+        bgUrl: "/src/assets/images/doctorF.png",
         navigateLink: "/doctor-workflow-optimization"
     },
     {
@@ -52,14 +52,14 @@ const features = [
         title: 'Pharmacy & Prescription Management',
         description: 'Seamless integration with pharmacies for e-prescriptions and medication tracking.',
         icon: (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-black/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
             </svg>
         ),
         bgColor: 'bg-yellow-50',
         hoverColor: 'group-hover:bg-yellow-100',
         gradient: 'from-yellow-400 to-yellow-600',
-        bgUrl: "/src/assets/images/phamacy.webp",
+        bgUrl: "/src/assets/images/pharmacistF.png",
         navigateLink: "/pharmacy-prescription-management"
     },
     {
@@ -67,14 +67,14 @@ const features = [
         title: 'Appointment Management',
         description: 'Automated appointment scheduling, reminders, and calendar integration for better time management.',
         icon: (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-black/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
         ),
         bgColor: 'bg-red-50',
         hoverColor: 'group-hover:bg-red-100',
         gradient: 'from-red-400 to-red-600',
-        bgUrl: "/src/assets/images/book.png",
+        bgUrl: "/src/assets/images/appoinmentF.png",
         navigateLink: "/appointment-management"
     },
     {
@@ -82,14 +82,14 @@ const features = [
         title: 'Telemedicine',
         description: 'Secure video consultations and remote patient monitoring for virtual healthcare delivery.',
         icon: (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-black/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
             </svg>
         ),
         bgColor: 'bg-indigo-50',
         hoverColor: 'group-hover:bg-indigo-100',
         gradient: 'from-indigo-400 to-indigo-600',
-        bgUrl: "/src/assets/images/tele.jpg",
+        bgUrl: "/src/assets/images/telemedicineF.png",
         navigateLink: "/telemedicine"
 
     },
@@ -98,14 +98,14 @@ const features = [
         title: 'Reports & Analytics',
         description: 'Comprehensive analytics and reporting tools for tracking clinic performance and patient outcomes.',
         icon: (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-black/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
             </svg>
         ),
         bgColor: 'bg-pink-50',
         hoverColor: 'group-hover:bg-pink-100',
         gradient: 'from-pink-400 to-pink-600',
-        bgUrl: "/src/assets/images/report.png",
+        bgUrl: "/src/assets/images/reportF.png",
         navigateLink: "/reports-analytics"
     }
 ];
@@ -343,14 +343,14 @@ const landingFeature = () => {
                                         <div className="relative h-full bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100 overflow-hidden">
                                             {/* Background Image with Overlay */}
                                             <div className="absolute inset-0 overflow-hidden">
-                                                <div className="absolute inset-0 bg-cover opacity-70 bg-center transition-all duration-700 ease-in-out transform group-hover:scale-110" style={{ backgroundImage: `url(${feature.bgUrl})` }}></div>
-                                                <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent"></div>
+                                                <div className="absolute inset-0 bg-cover opacity-80 bg-center transition-all duration-700 ease-in-out transform group-hover:scale-110" style={{ backgroundImage: `url(${feature.bgUrl})` }}></div>
+                                                <div className="absolute inset-0 bg-black/60"></div>
                                             </div>
 
                                             {/* Main Content */}
                                             <div className="relative px-6 pb-1 h-full flex flex-col justify-end z-10">
                                                 <div className="mb-6 relative">
-                                                    <div className={`w-16 h-16 mt-4 rounded-2xl bg-white/50 flex items-center justify-center transition-all duration-300 transform group-hover:scale-110 group-hover:rotate-3 relative overflow-hidden`}>
+                                                    <div className={`w-16 h-16 mt-4 rounded-2xl bg-white/30 flex items-center justify-center transition-all duration-300 transform group-hover:scale-110 group-hover:rotate-3 relative overflow-hidden`}>
                                                         <div className={`absolute inset-0 bg-linear-to-br ${feature.gradient} opacity-0 group-hover:opacity-20 transition-opacity duration-300`}></div>
                                                         <div className={`text-${feature.gradient.split('-')[1]}-600 relative z-10 `}>
                                                             {feature.icon}
@@ -393,7 +393,7 @@ const landingFeature = () => {
                                             </div>
 
                                             {/* Gradient Corner */}
-                                            <div className={`absolute top-0 right-0 w-20 h-20 bg-linear-to-br ${feature.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500 blur-2xl`}></div>
+                                            <div className={`absolute top-0 right-0 w-50 h-70 bg-linear-to-br ${feature.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500 blur-2xl`}></div>
                                         </div>
                                     </div>
                                 ))}
@@ -403,7 +403,7 @@ const landingFeature = () => {
                         {/* Right Arrow */}
                         <button
                             onClick={handleNext}
-                            className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-transparent transition-all duration-300 hover:scale-130 focus:outline-none"
+                            className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-transparent transition-all duration-300  hover:scale-130 focus:outline-none"
                             style={{ marginRight: '-60px' }}
                             aria-label="Next features"
                         >

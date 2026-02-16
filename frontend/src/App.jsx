@@ -15,7 +15,13 @@ import ForClinic from './pages/HowItWork/forClinic.jsx';
 import ForDoctor from './pages/HowItWork/forDoctor.jsx';
 import ForPatient from './pages/HowItWork/forPatient.jsx';
 import ForPharmacists from './pages/HowItWork/forpharmacists.jsx';
-
+import AISymptomAnalyzer from './pages/Features/AISymptomAnalyzer.jsx';
+import SmartClinicManagement from './pages/Features/SmartClinicManagement.jsx';
+import DoctorWorkflowOptimization from './pages/Features/DoctorWorkflowOptimization.jsx';
+import PharmacyPrescriptionManagement from './pages/Features/PharmacyPrescriptionManagement.jsx';
+import AppointmentManagement from './pages/Features/AppointmentManagement.jsx';
+import Telemedicine from './pages/Features/Telemedicine.jsx';
+import ReportsAnalytics from './pages/Features/ReportsAnalytics.jsx';
 
 const LandingPageLayout = () => {
   return (
@@ -36,12 +42,18 @@ const LandingPageLayout = () => {
         <Route path ="/howItWork-patient" element={<ForPatient/>}/>
         <Route path ="/howItWork-doctor" element={<ForDoctor/>}/>
         <Route path ="/howItWork-pharmacists" element={<ForPharmacists/>}/>
+        <Route path ="/ai-symptom-analyzer" element={<AISymptomAnalyzer/>}/>
+        <Route path ="/smart-clinic-management" element={<SmartClinicManagement/>}/>
+        <Route path ="/doctor-workflow-optimization" element={<DoctorWorkflowOptimization/>}/>
+        <Route path ="/pharmacy-prescription-management" element={<PharmacyPrescriptionManagement/>}/>
+        <Route path ="/appointment-management" element={<AppointmentManagement/>}/>
+        <Route path ="/telemedicine" element={<Telemedicine/>}/>
+        <Route path ="/reports-analytics" element={<ReportsAnalytics/>}/>
       </Routes>
     </div>
     </div>
   );
 };
-
 
 const App = () => {
   return (

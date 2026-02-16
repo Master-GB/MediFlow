@@ -188,7 +188,7 @@ function LandingAbout() {
                   className="mt-8"
                 >
                   <a
-                    href="/about"
+                    href="/about-us"
                     className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 transform hover:scale-105"
                   >
                     Discover Our Story
